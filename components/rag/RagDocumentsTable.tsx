@@ -11,7 +11,7 @@ import {
 } from '../ui/table';
 
 const selectBaseClass =
- 'appearance-none rounded-md border border-border bg-card px-3 py-2.5 text-xs font-bold uppercase tracking-wide text-muted-foreground shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background';
+ 'h-7 appearance-none rounded-md border border-border bg-card px-2.5 text-[9px] font-bold uppercase tracking-wide text-muted-foreground shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background';
 
 const inputBaseClass =
  'block w-full sm:w-72 pl-9 pr-8 py-2.5 border border-input rounded-lg text-xs bg-background text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background shadow-sm';
