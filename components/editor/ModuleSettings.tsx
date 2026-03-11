@@ -97,7 +97,7 @@ export const ModuleSettings: React.FC<ModuleSettingsProps> = ({
     [
       'flex flex-1 h-full items-center justify-center rounded-md px-3 py-1.5 text-xs font-semibold tracking-wide transition-all duration-200 ease-out',
       isActive
-        ? 'bg-[#2e2e2e] text-foreground shadow-[0_8px_24px_-16px_rgba(0,0,0,0.9)]'
+        ? 'bg-[#202020] text-foreground shadow-[0_8px_24px_-16px_rgba(0,0,0,0.9)]'
         : 'text-muted-foreground hover:bg-card/85 hover:text-foreground'
     ].join(' ');
 

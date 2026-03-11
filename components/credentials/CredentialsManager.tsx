@@ -187,7 +187,7 @@ export const CredentialsManager: React.FC<CredentialsManagerProps> = ({ workflow
           <div className="mb-8 flex items-end justify-between">
             <div>
               <div className="flex items-center gap-3">
-                <div className="w-1 h-6 bg-primary rounded-full"></div>
+                <div className="w-1 h-6 bg-emerald-400 rounded-full"></div>
                 <h2 className="text-lg font-bold text-foreground tracking-tight">Credenciais & Segredos</h2>
               </div>
                <p className="text-sm text-muted-foreground mt-1 pl-4">Gerencie as chaves de API e conexões seguras.</p>

@@ -820,10 +820,10 @@ const AgentDetail: React.FC<AgentDetailProps> = ({
       
       {viewMode === 'rag' && (
   <div className="animate-fade-in">
-    <div className="mb-8 flex items-end justify-between">
+        <div className="mb-8 flex items-end justify-between">
       <div>
         <div className="flex items-center gap-3">
-          <div className="w-1 h-6 bg-primary rounded-full"></div>
+          <div className="w-1 h-6 bg-sky-400 rounded-full"></div>
           <h2 className="text-lg font-bold text-foreground tracking-tight">
             Base de Conhecimento (RAG)
           </h2>
@@ -835,51 +835,6 @@ const AgentDetail: React.FC<AgentDetailProps> = ({
 
       <div className="flex flex-col items-end gap-2">
         <div className="flex items-center gap-3">
-          {ragUsage && (
-            <div
-              className={`flex flex-col justify-center px-4 py-2.5 rounded-lg shadow-sm border bg-card border-border min-w-[180px] transition-all duration-300 ${
-                isLoadingRag ? 'opacity-60' : 'opacity-100'
-              }`}
-            >
-              <div className="h-1 w-full bg-muted rounded-full overflow-hidden">
-                <div
-                  className={`h-full transition-all duration-700 ease-out rounded-full ${
-                    isLoadingRag
-                      ? 'bg-muted-foreground'
-                      : ragUsage.is_over_limit
-                      ? 'bg-red-500'
-                      : ragUsage.usage_percent > 80
-                      ? 'bg-amber-500'
-                      : 'bg-primary'
-                  }`}
-                  style={{ width: `${Math.min(ragUsage.usage_percent, 100)}%` }}
-                />
-              </div>
-
-              <div className="flex items-center justify-between mt-1">
-                <span className="text-[8px] text-muted-foreground font-medium tracking-tight leading-none">
-                  {(ragUsage.total_bytes / 1024 / 1024).toFixed(2)} / {ragUsage.storage_limit_mb} MB
-                </span>
-
-                <div className="flex items-center gap-2">
-                  <span
-                    className={`text-[9px] font-bold tabular-nums leading-none ${
-                      ragUsage.is_over_limit ? 'text-red-400' : 'text-foreground'
-                    }`}
-                  >
-                    {ragUsage.usage_percent}%
-                  </span>
-
-                  {ragUsage.is_over_limit && !isLoadingRag && (
-                    <span className="text-[8px] text-red-400 font-bold flex items-center gap-0.5 uppercase tracking-wider leading-none animate-pulse">
-                      <AlertTriangle className="w-2 h-2" /> Limite
-                    </span>
-                  )}
-                </div>
-              </div>
-            </div>
-          )}
-
           {agent.ragEnabled && (
             <>
               <input
@@ -932,6 +887,7 @@ const AgentDetail: React.FC<AgentDetailProps> = ({
     <RagDocumentsTable
       documents={ragDocuments}
       isLoading={isLoadingRag}
+      usage={ragUsage}
       selectedIds={selectedRagIds}
       onSelectionChange={setSelectedRagIds}
       onView={handleViewRagDoc}
@@ -973,7 +929,7 @@ const AgentDetail: React.FC<AgentDetailProps> = ({
           <div className="mb-8 flex items-end justify-between">
              <div>
                  <div className="flex items-center gap-3">
-                    <div className="w-1 h-6 bg-primary rounded-full"></div>
+                    <div className="w-1 h-6 bg-amber-400 rounded-full"></div>
                       <h2 className="text-lg font-bold text-foreground tracking-tight">Módulos de Configuração</h2>
                  </div>
                   <p className="text-sm text-muted-foreground mt-1 pl-4">Gerencie os parâmetros de comportamento do agente.</p>

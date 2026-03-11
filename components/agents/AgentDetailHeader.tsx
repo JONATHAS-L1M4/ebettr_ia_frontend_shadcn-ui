@@ -119,7 +119,7 @@ export const AgentDetailHeader: React.FC<AgentDetailHeaderProps> = ({
     [
       'flex-1 sm:flex-none flex h-full items-center justify-center gap-2 rounded-md px-3 py-1.5 text-xs font-semibold uppercase tracking-wide transition-all duration-200 ease-out',
       isActive
-        ? 'bg-[#2e2e2e] text-foreground shadow-[0_8px_24px_-16px_rgba(0,0,0,0.9)]'
+        ? 'bg-[#202020] text-foreground shadow-[0_8px_24px_-16px_rgba(0,0,0,0.9)]'
         : 'text-muted-foreground hover:bg-card/85 hover:text-foreground'
     ].join(' ');
 
@@ -189,7 +189,7 @@ export const AgentDetailHeader: React.FC<AgentDetailHeaderProps> = ({
       <div className="flex w-full shrink-0 flex-col items-stretch gap-4 sm:flex-row sm:items-center lg:w-auto">
         {/* Toggle View (Tabs) */}
         {showNavigation && (
-          <div className="flex h-[36px] w-full items-center gap-2 rounded-lg border border-border bg-muted/60 p-1 shadow-inner sm:w-auto">
+          <div className="flex h-[36px] w-full items-center gap-2 rounded-lg bg-muted/60 p-1 shadow-inner sm:w-auto">
             {isLoading ? (
               <div className="flex w-full animate-pulse items-center gap-2 px-1">
                 <div className="h-6 w-20 rounded-md bg-muted" />

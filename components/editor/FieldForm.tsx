@@ -81,7 +81,7 @@ export const FieldForm: React.FC<FieldFormProps> = ({
     [
       'flex flex-1 h-full items-center justify-center rounded-md px-3 py-1.5 text-[10px] font-semibold tracking-wide transition-all duration-200 ease-out sm:text-xs',
       isActive
-        ? 'bg-[#2e2e2e] text-foreground shadow-[0_8px_24px_-16px_rgba(0,0,0,0.9)]'
+        ? 'bg-[#202020] text-foreground shadow-[0_8px_24px_-16px_rgba(0,0,0,0.9)]'
         : 'text-muted-foreground hover:bg-card/85 hover:text-foreground'
     ].join(' ');
 

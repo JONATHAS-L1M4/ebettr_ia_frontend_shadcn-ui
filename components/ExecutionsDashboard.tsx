@@ -362,7 +362,7 @@ export const ExecutionsDashboard: React.FC<ExecutionsDashboardProps> = ({ agent 
         <div className="mb-4 flex items-end justify-between">
             <div>
                 <div className="flex items-center gap-3">
-                    <div className="w-1 h-6 bg-primary rounded-full"></div>
+                    <div className="w-1 h-6 bg-rose-400 rounded-full"></div>
                     <h2 className="text-lg font-bold text-foreground tracking-tight">Execuções & Logs</h2>
                 </div>
                 <p className="text-sm text-muted-foreground mt-1 pl-4">Acompanhe o histórico de atividades e performance do agente.</p>

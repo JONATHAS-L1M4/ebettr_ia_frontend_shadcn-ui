@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
-import { RagDocument } from '../../types';
-import { Eye, FileText, Loader2, Search, Trash2, X } from '../ui/Icons';
+import { RagDocument, RagUsage } from '../../types';
+import { AlertTriangle, Eye, FileText, Loader2, Search, Trash2, X } from '../ui/Icons';
 import {
  Table,
  TableBody,
@@ -14,7 +14,7 @@ const selectBaseClass =
  'appearance-none rounded-md border border-border bg-card px-3 py-1.5 text-[10px] font-bold uppercase tracking-wide text-muted-foreground shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background';
 
 const inputBaseClass =
- 'block w-full sm:w-72 pl-9 pr-8 py-2.5 border border-input rounded-lg text-xs bg-background text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-all shadow-sm';
+ 'block w-full sm:w-72 pl-9 pr-8 py-2.5 border border-input rounded-lg text-xs bg-background text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background shadow-sm';
 
 const controlButtonClass =
  'px-3 py-1.5 text-[10px] font-bold text-muted-foreground hover:text-foreground uppercase tracking-wide transition-colors disabled:opacity-30 disabled:cursor-not-allowed rounded-md bg-card shadow-sm border border-border hover:bg-accent';
@@ -25,6 +25,7 @@ const dangerButtonClass =
 interface RagDocumentsTableProps {
  documents: RagDocument[];
  isLoading: boolean;
+ usage?: RagUsage | null;
  selectedIds: number[];
  onSelectionChange: (ids: number[]) => void;
  onDelete?: (id: number) => void;
@@ -36,6 +37,7 @@ interface RagDocumentsTableProps {
 export const RagDocumentsTable: React.FC<RagDocumentsTableProps> = ({
  documents,
  isLoading,
+ usage = null,
  selectedIds,
  onSelectionChange,
  onDelete,
@@ -126,6 +128,7 @@ export const RagDocumentsTable: React.FC<RagDocumentsTableProps> = ({
  paginatedDocuments.every((doc) => selectedIds.includes(doc.id));
  const currentRangeStart = filteredDocuments.length === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1;
  const currentRangeEnd = Math.min(filteredDocuments.length, currentPage * itemsPerPage);
+ const safeTotalPages = Math.max(totalPages, 1);
 
  const renderSkeletonRows = () => {
  return Array.from({ length: itemsPerPage }).map((_, index) => (
@@ -155,50 +158,61 @@ export const RagDocumentsTable: React.FC<RagDocumentsTableProps> = ({
  return (
  <div className="bg-panel border border-border rounded-lg shadow-sm overflow-hidden">
  <div className="p-5 border-b border-border flex flex-col gap-4">
- <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+ <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
  <div>
  <h3 className="text-base font-bold text-foreground">Documentos</h3>
  <p className="text-xs text-muted-foreground font-light hidden sm:block">
- Mostrando {currentRangeStart} - {currentRangeEnd} de {filteredDocuments.length}
+ Base de conhecimento do agente.
  </p>
  <p className="text-[10px] text-muted-foreground font-light sm:hidden mt-0.5">
- {filteredDocuments.length} documentos encontrados
+ Consulte os documentos disponiveis.
  </p>
  </div>
 
- <div className="flex items-center gap-2 flex-wrap">
- {selectedIds.length > 0 && onBulkDelete && (
- <button
- type="button"
- onClick={onBulkDelete}
- disabled={isDeletingBulk}
- className={dangerButtonClass}
+ <div className="flex flex-col gap-3 sm:items-end">
+ <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center sm:justify-end">
+ {usage && (
+ <div
+ className={`flex min-w-[180px] flex-col justify-center rounded-lg border border-border bg-card px-4 py-2.5 shadow-sm ${
+ isLoading ? 'opacity-60' : 'opacity-100'
+ }`}
  >
- {isDeletingBulk ? <Loader2 className="w-3 h-3 animate-spin" /> : <Trash2 className="w-3 h-3" />}
- Excluir ({selectedIds.length})
- </button>
+ <div className="h-1 w-full overflow-hidden rounded-full bg-muted">
+ <div
+ className={`h-full rounded-full transition-all duration-700 ease-out ${
+ isLoading
+ ? 'bg-muted-foreground'
+ : usage.is_over_limit
+ ? 'bg-red-500'
+ : usage.usage_percent > 80
+ ? 'bg-amber-500'
+ : 'bg-primary'
+ }`}
+ style={{ width: `${Math.min(usage.usage_percent, 100)}%` }}
+ />
+ </div>
+ <div className="mt-1 flex items-center justify-between">
+ <span className="text-[8px] font-medium leading-none tracking-tight text-muted-foreground">
+ {(usage.total_bytes / 1024 / 1024).toFixed(2)} / {usage.storage_limit_mb} MB
+ </span>
+ <div className="flex items-center gap-2">
+ <span
+ className={`text-[9px] font-bold leading-none tabular-nums ${
+ usage.is_over_limit ? 'text-red-400' : 'text-foreground'
+ }`}
+ >
+ {usage.usage_percent}%
+ </span>
+ {usage.is_over_limit && !isLoading && (
+ <span className="flex items-center gap-0.5 text-[8px] font-bold uppercase tracking-wider leading-none text-red-400 animate-pulse">
+ <AlertTriangle className="w-2 h-2" /> Limite
+ </span>
  )}
- <button
- type="button"
- onClick={() => goToPage(currentPage - 1)}
- disabled={currentPage === 1}
- className={controlButtonClass}
- >
- Voltar
- </button>
- <button
- type="button"
- onClick={() => goToPage(currentPage + 1)}
- disabled={currentPage === totalPages || totalPages === 0}
- className={controlButtonClass}
- >
- Proximo
- </button>
  </div>
  </div>
-
- <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
- <div className="relative w-full sm:w-auto">
+ </div>
+ )}
+ <div className="relative w-full sm:w-72">
  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
  <Search className="h-3.5 w-3.5 text-muted-foreground" />
  </div>
@@ -219,25 +233,7 @@ export const RagDocumentsTable: React.FC<RagDocumentsTableProps> = ({
  </button>
  )}
  </div>
-
- <div className="flex items-center gap-2 justify-between sm:justify-end">
- <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
- {filteredDocuments.length} itens
  </div>
- <select
- value={itemsPerPage}
- onChange={(event) => {
- setItemsPerPage(Number(event.target.value));
- setCurrentPage(1);
- }}
- className={selectBaseClass}
- >
- <option value={5}>5 / pag</option>
- <option value={10}>10 / pag</option>
- <option value={20}>20 / pag</option>
- <option value={50}>50 / pag</option>
- <option value={100}>100 / pag</option>
- </select>
  </div>
  </div>
  </div>
@@ -326,6 +322,63 @@ export const RagDocumentsTable: React.FC<RagDocumentsTableProps> = ({
  )}
  </TableBody>
  </Table>
+ </div>
+
+ <div className="border-t border-border bg-muted/20 px-5 py-4">
+ <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+ <div>
+ <p className="text-xs font-light text-muted-foreground">
+ Mostrando {currentRangeStart} - {currentRangeEnd} de {filteredDocuments.length}
+ </p>
+ <p className="mt-0.5 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+ Pagina {currentPage} de {safeTotalPages}
+ </p>
+ </div>
+
+ <div className="flex flex-wrap items-center justify-between gap-2 sm:justify-end">
+ <select
+ value={itemsPerPage}
+ onChange={(event) => {
+ setItemsPerPage(Number(event.target.value));
+ setCurrentPage(1);
+ }}
+ className={selectBaseClass}
+ >
+ <option value={5}>5 / pag</option>
+ <option value={10}>10 / pag</option>
+ <option value={20}>20 / pag</option>
+ <option value={50}>50 / pag</option>
+ <option value={100}>100 / pag</option>
+ </select>
+ {selectedIds.length > 0 && onBulkDelete && (
+ <button
+ type="button"
+ onClick={onBulkDelete}
+ disabled={isDeletingBulk}
+ className={dangerButtonClass}
+ >
+ {isDeletingBulk ? <Loader2 className="w-3 h-3 animate-spin" /> : <Trash2 className="w-3 h-3" />}
+ Excluir ({selectedIds.length})
+ </button>
+ )}
+ <button
+ type="button"
+ onClick={() => goToPage(currentPage - 1)}
+ disabled={currentPage === 1}
+ className={controlButtonClass}
+ >
+ Voltar
+ </button>
+ <button
+ type="button"
+ onClick={() => goToPage(currentPage + 1)}
+ disabled={currentPage === totalPages || totalPages === 0}
+ className={controlButtonClass}
+ >
+ Proximo
+ </button>
+ </div>
+ </div>
  </div>
  </div>
  );
