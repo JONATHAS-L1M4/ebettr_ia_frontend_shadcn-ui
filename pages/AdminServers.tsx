@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { ServerCredential, SupabaseServer } from '../types';
-import { Server, Plus, Globe, Key, Trash2, Edit2, Shield, Eye, EyeOff, Save, X, Terminal, CheckCircle2, AlertTriangle, Search, Loader2, Code, Copy, Database } from '../components/ui/Icons';
+import { Server, Plus, Globe, Key, Edit2, Shield, Eye, EyeOff, Save, X, Terminal, CheckCircle2, Search, Loader2, Code, Copy, Database } from '../components/ui/Icons';
 import { DashedAddCard } from '../components/ui/DashedAddCard';
 import SpotlightCard from '../components/ui/SpotlightCard';
 import Toggle from '../components/ui/Toggle';
@@ -10,6 +10,7 @@ import { inputBaseClass } from '../components/inputs/styles';
 import { serverManagementService } from '../services/serverManagementService';
 import { supabaseServerService } from '../services/supabaseServerService';
 import { DeleteWithCodeModal } from '../components/shared/DeleteWithCodeModal';
+import { DangerZoneSection } from '../components/shared/DangerZoneSection';
 import DarkPage from '../components/layout/DarkPage';
 
 const STORAGE_KEY = 'ebettr_servers';
@@ -622,7 +623,7 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
                <button 
                  type="submit"
                  disabled={isSubmitting}
-                 className="px-6 py-2 bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-bold rounded-md transition-all flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                 className="h-10 px-6 py-2 bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-bold rounded-md transition-all flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                >
                  {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
                  {isSubmitting ? 'Salvando...' : 'Salvar Servidor'}
@@ -632,28 +633,19 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
 
         {/* DANGER ZONE */}
         {editingId && (
-            <div className="mt-8 pt-8 border-t border-border animate-fade-in">
-                <h3 className="text-xs font-bold text-red-600 uppercase tracking-widest mb-4 flex items-center gap-2">
-                    <AlertTriangle className="w-4 h-4" /> Zona de Perigo
-                </h3>
-                <div className="border border-red-900/50 bg-red-950/40 rounded-lg p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    <div>
-                        <h4 className="text-sm font-bold text-foreground">Excluir Servidor</h4>
-                        <p className="text-xs text-muted-foreground mt-1">
-                            Esta ação removerá permanentemente as credenciais de <strong>{activeTab === 'n8n' ? formName : supaFormName}</strong> da nuvem.
-                        </p>
-                    </div>
-                    <button 
-                        type="button"
-                        onClick={() => setIsDeleteModalOpen(true)}
-                        disabled={isSubmitting}
-                        className="px-4 py-2 bg-card border border-red-200 text-red-600 text-xs font-bold rounded-md hover:bg-red-600 hover:text-white transition-all flex items-center justify-center gap-2 shrink-0 disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                        {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
-                        Excluir Servidor
-                    </button>
-                </div>
-            </div>
+            <DangerZoneSection
+                title="Excluir Servidor"
+                description={
+                    <>
+                        Esta ação removerá permanentemente as credenciais de <strong>{activeTab === 'n8n' ? formName : supaFormName}</strong> da nuvem.
+                    </>
+                }
+                actionLabel="Excluir Servidor"
+                loadingLabel="Excluindo..."
+                onAction={() => setIsDeleteModalOpen(true)}
+                disabled={isSubmitting}
+                isLoading={isSubmitting}
+            />
         )}
 
         <DeleteWithCodeModal 
@@ -697,7 +689,7 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
                         </div>
                         <input 
                             type="text" 
-                            className="bg-background border border-input text-foreground text-sm rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background block w-full pl-10 h-9 placeholder:text-muted-foreground shadow-sm" 
+                            className="w-full px-3 py-2 bg-background border border-input rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background text-sm placeholder:text-muted-foreground shadow-sm text-foreground pl-10 h-9" 
                             placeholder="Buscar servidor..." 
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
@@ -707,7 +699,7 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
                     {(activeTab === 'n8n' || activeTab === 'supabase') && (
                         <button 
                             onClick={() => setIsFormOpen(true)}
-                            className="flex items-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground px-4 h-9 rounded-md text-xs font-bold uppercase tracking-wide transition-all border border-transparent whitespace-nowrap shadow-sm"
+                            className="flex h-10 items-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground px-4 rounded-md text-xs font-bold uppercase tracking-wide transition-all border border-transparent whitespace-nowrap shadow-sm"
                         >
                             <Plus className="w-4 h-4" />
                             <span className="hidden sm:inline">Novo Servidor</span>
@@ -911,4 +903,3 @@ export const AdminServers: React.FC<AdminServersProps> = ({ onLogout }) => {
     </DarkPage>
   );
 };
-

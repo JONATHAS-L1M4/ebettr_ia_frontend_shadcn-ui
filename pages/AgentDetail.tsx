@@ -9,7 +9,7 @@ import { Trash2, Loader2, RefreshCw, Database, Upload, Play, AlertTriangle } fro
 import { useNotification } from '../context/NotificationContext';
 import { toggleN8nWorkflow, updateN8nWorkflowConfig, fetchN8nWorkflowFullJson, extractCredentialsFromWorkflow } from '../services/n8nService';
 import { AgentDetailHeader } from '../components/agents/AgentDetailHeader';
-import { EditAgentForm } from '../components/agents/EditAgentForm';
+import { AgentForm } from '../components/agents/AgentForm';
 import { DeleteWithCodeModal } from '../components/shared/DeleteWithCodeModal';
 import { AddModuleCard } from '../components/AddModuleCard';
 import { CredentialsManager } from '../components/credentials/CredentialsManager';
@@ -735,10 +735,11 @@ const AgentDetail: React.FC<AgentDetailProps> = ({
   if (isEditing && canEditAgent) {
     return (
         <DarkPage className="min-h-[calc(100vh-4rem)]">
-            <EditAgentForm 
+            <AgentForm
+                mode="edit"
                 agent={agent}
                 existingAgents={allAgents}
-                onSave={handleSaveSettings}
+                onSubmit={handleSaveSettings}
                 onCancel={() => setIsEditing(false)}
                 onDelete={onDeleteAgent && canDeleteAgent ? () => setIsDeleteAgentModalOpen(true) : undefined}
                 userRole={userRole}
@@ -863,7 +864,7 @@ const AgentDetail: React.FC<AgentDetailProps> = ({
               <button
                 onClick={() => fileInputRef.current?.click()}
                 disabled={isUploadingRagFile}
-                className={`flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wide transition-all shadow-sm border 
+                className={`flex h-10 items-center justify-center gap-2 px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wide transition-all shadow-sm border 
                   ${
                     isUploadingRagFile
                       ? 'bg-muted text-muted-foreground border-border cursor-not-allowed'
@@ -884,7 +885,7 @@ const AgentDetail: React.FC<AgentDetailProps> = ({
             onClick={() => fetchRagDocuments(true)}
             disabled={isLoadingRag || ragSyncCooldown > 0}
             className={`
-              flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wide transition-all shadow-sm border
+              flex h-10 items-center justify-center gap-2 px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wide transition-all shadow-sm border
               ${
                 isLoadingRag || ragSyncCooldown > 0
                   ? 'bg-muted text-muted-foreground border-border cursor-not-allowed'
@@ -954,7 +955,7 @@ const AgentDetail: React.FC<AgentDetailProps> = ({
                  <button 
                     onClick={handleSaveAll}
                     disabled={isSavingAll}
-                    className="flex items-center gap-2 px-6 py-2.5 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg shadow-md transition-all transform active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed font-bold uppercase tracking-wide text-xs"
+                    className="flex h-10 items-center gap-2 px-6 py-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg shadow-md transition-all transform active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed font-bold uppercase tracking-wide text-xs"
                  >
                     {isSavingAll ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
                     {isSavingAll ? 'Salvando...' : `Salvar Alterações (${pendingChanges.length})`}
@@ -966,7 +967,7 @@ const AgentDetail: React.FC<AgentDetailProps> = ({
                     onClick={handleManualSync}
                     disabled={isSyncing || syncCooldown > 0}
                     className={`
-                        flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wide transition-all shadow-sm border
+                        flex h-10 items-center justify-center gap-2 px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wide transition-all shadow-sm border
                         ${isSyncing || syncCooldown > 0 
                             ? 'bg-muted text-muted-foreground border-border cursor-not-allowed' 
                             : 'bg-card text-muted-foreground border-border hover:bg-muted hover:text-foreground'}
@@ -1058,9 +1059,6 @@ const AgentDetail: React.FC<AgentDetailProps> = ({
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
             <div className="bg-card rounded-lg shadow-2xl border border-border max-w-sm w-full p-6 animate-scale-in">
                 <div className="flex flex-col items-center text-center gap-4">
-                    <div className="w-12 h-12 bg-red-950/40 text-red-400 rounded-full flex items-center justify-center">
-                        <Trash2 className="w-6 h-6" />
-                    </div>
                     <div>
                         <h3 className="text-lg font-bold text-foreground">Excluir Módulo?</h3>
                         <p className="text-sm text-muted-foreground mt-2">
@@ -1070,13 +1068,13 @@ const AgentDetail: React.FC<AgentDetailProps> = ({
                     <div className="flex gap-3 w-full pt-2">
                         <button 
                             onClick={() => setDeletingSectionId(null)}
-                            className="flex-1 py-2.5 text-sm font-medium text-muted-foreground hover:bg-muted rounded-md transition-colors"
+                            className="flex h-10 flex-1 items-center justify-center py-2 text-sm font-medium text-muted-foreground hover:bg-muted rounded-md transition-colors"
                         >
                             Cancelar
                         </button>
                         <button 
                             onClick={confirmDeleteModule}
-                            className="flex-1 py-2.5 text-sm font-bold text-red-50 bg-red-700 hover:bg-red-600 rounded-md transition-colors shadow-sm"
+                            className="flex h-10 flex-1 items-center justify-center py-2 text-sm font-bold text-red-50 bg-red-700 hover:bg-red-600 rounded-md transition-colors shadow-sm"
                         >
                             Excluir
                         </button>
@@ -1100,4 +1098,3 @@ const AgentDetail: React.FC<AgentDetailProps> = ({
 };
 
 export default AgentDetail;
-

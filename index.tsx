@@ -4,22 +4,15 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import { NotificationProvider } from './context/NotificationContext';
-import { lightTheme, darkTheme } from './design-tokens';
-import './index.css';
+import { darkTheme } from './design-tokens';
 
-// Inject Theme Tokens from design-tokens.ts directly into root styles
+// Keep the app in dark mode from the first paint.
 const rootEl = document.documentElement;
+rootEl.classList.add('dark');
+rootEl.style.colorScheme = 'dark';
 
-// 1. Apply Light Theme as the base
-Object.entries(lightTheme).forEach(([key, value]) => {
-  rootEl.style.setProperty(key, value);
-});
-
-// 2. Override ONLY Sidebar variables with Dark Theme values
 Object.entries(darkTheme).forEach(([key, value]) => {
-  if (key.startsWith('--sidebar')) {
-    rootEl.style.setProperty(key, value);
-  }
+  rootEl.style.setProperty(key, value);
 });
 
 

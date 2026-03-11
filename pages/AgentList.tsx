@@ -4,7 +4,7 @@ import { Agent, UserRole } from '../types';
 import { Plus, Bot, Search } from '../components/ui/Icons';
 import { useNotification } from '../context/NotificationContext';
 import { toggleN8nWorkflow } from '../services/n8nService';
-import { CreateAgentForm } from '../components/agents/CreateAgentForm';
+import { AgentForm } from '../components/agents/AgentForm';
 import { AgentCard } from '../components/agents/AgentCard';
 import { CreateAgentCard } from '../components/agents/CreateAgentCard';
 import DarkPage from '../components/layout/DarkPage';
@@ -157,9 +157,10 @@ const AgentList: React.FC<AgentListProps> = ({
   if (isFormOpen && canCreate) {
     return (
         <DarkPage className="min-h-[calc(100vh-4rem)]">
-        <CreateAgentForm 
+        <AgentForm
+            mode="create"
             existingAgents={agents}
-            onCreate={handleCreateAgent}
+            onSubmit={handleCreateAgent}
             onCancel={() => setIsFormOpen(false)}
         />
         </DarkPage>
@@ -200,7 +201,7 @@ const AgentList: React.FC<AgentListProps> = ({
                 </div>
                 <input 
                     type="text" 
-                    className="bg-background border border-border text-foreground text-sm rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background block w-full pl-10 h-9 placeholder:text-muted-foreground shadow-sm" 
+                    className="w-full px-3 py-2 bg-background border border-input rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background text-sm placeholder:text-muted-foreground shadow-sm text-foreground pl-10 h-9" 
                     placeholder="Buscar agente..." 
                     value={searchQuery}
                     onChange={(e) => onSearchChange(e.target.value)}
@@ -210,7 +211,7 @@ const AgentList: React.FC<AgentListProps> = ({
             {canCreate && onCreateAgent && (
                 <button 
                     onClick={() => setIsFormOpen(true)}
-                    className="flex items-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground px-4 h-9 rounded-md text-xs font-bold uppercase tracking-wide transition-all border border-transparent whitespace-nowrap shadow-sm"
+                    className="flex h-10 items-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground px-4 rounded-md text-xs font-bold uppercase tracking-wide transition-all border border-transparent whitespace-nowrap shadow-sm"
                 >
                 <Plus className="w-4 h-4" />
                 <span className="hidden sm:inline">Novo Agente</span>
@@ -259,4 +260,3 @@ const AgentList: React.FC<AgentListProps> = ({
 };
 
 export default AgentList;
-

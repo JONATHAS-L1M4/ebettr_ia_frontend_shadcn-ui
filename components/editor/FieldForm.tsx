@@ -3,7 +3,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { ConfigField, FieldType } from '../../types';
 import { Code, RotateCcw, Plus, FileJson, Shield, CircleHelp, Upload, Globe, LayoutGrid, Eye } from '../ui/Icons';
 import Toggle from '../ui/Toggle';
-import { inputBaseClass } from '../inputs/styles';
+import { controlBaseClass, inputBaseClass, selectBaseClass } from '../inputs/styles';
 import { encryptPath } from '../../utils/encryption';
 
 // Imported Inputs for Default Value preview
@@ -71,6 +71,13 @@ export const FieldForm: React.FC<FieldFormProps> = ({
   const [max, setMax] = useState<number | ''>('');
   const [minLen, setMinLen] = useState<number | ''>('');
   const [maxLen, setMaxLen] = useState<number | ''>('');
+  const getWidthTabClass = (isActive: boolean) =>
+    [
+      'flex flex-1 h-full items-center justify-center rounded-md px-3 py-1.5 text-[10px] font-semibold tracking-wide transition-all duration-200 ease-out sm:text-xs',
+      isActive
+        ? 'bg-[#2e2e2e] text-foreground shadow-[0_8px_24px_-16px_rgba(0,0,0,0.9)]'
+        : 'text-muted-foreground hover:bg-card/85 hover:text-foreground'
+    ].join(' ');
 
   // Helper para exibir o caminho legível (Raw Path)
   const displayRawPath = useMemo(() => {
@@ -377,18 +384,13 @@ export const FieldForm: React.FC<FieldFormProps> = ({
                 <label className={labelClass}>
                     <LayoutGrid className="w-3 h-3" /> Proporção do Campo
                 </label>
-                <div className="bg-muted/60 p-1 rounded-lg flex items-center gap-1 shadow-inner w-full border border-border">
+                <div className="flex h-[36px] w-full items-center gap-2 rounded-lg border border-border bg-muted/60 p-1 shadow-inner">
                     {availableWidths.map((opt) => (
                         <button 
                             key={opt.val}
                             type="button"
                             onClick={() => setLayoutWidth(opt.val as any)}
-                            className={`
-                                flex-1 flex items-center justify-center px-3 py-1.5 rounded-md text-[10px] sm:text-xs font-semibold uppercase tracking-wide transition-all duration-300 ease-out
-                                ${layoutWidth === opt.val 
-                                    ? 'bg-card border border-border text-foreground shadow-sm transform scale-100' 
-                                    : 'text-muted-foreground hover:text-foreground hover:bg-accent'}
-                            `}
+                            className={getWidthTabClass(layoutWidth === opt.val)}
                         >
                             {opt.label}
                         </button>
@@ -495,7 +497,7 @@ export const FieldForm: React.FC<FieldFormProps> = ({
             <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
                     <label className={labelClass}>Tipo de Dado</label>
-                    <select value={type} onChange={e => setType(e.target.value as any)} className={inputBaseClass}>
+                    <select value={type} onChange={e => setType(e.target.value as any)} className={selectBaseClass}>
                         {fieldTypes.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
                     </select>
                 </div>
@@ -574,7 +576,7 @@ export const FieldForm: React.FC<FieldFormProps> = ({
                     <textarea 
                         value={defaultValue} 
                         onChange={e => setDefaultValue(e.target.value)} 
-                        className={`${inputBaseClass} font-mono text-xs`} 
+                        className={`${controlBaseClass} font-mono text-xs`} 
                         rows={6}
                         placeholder="Digite sua anotação aqui... Suporta **Markdown**."
                     />
@@ -635,7 +637,7 @@ export const FieldForm: React.FC<FieldFormProps> = ({
                 <textarea 
                     value={notes} 
                     onChange={e => setNotes(e.target.value)} 
-                    className={`${inputBaseClass} min-h-[80px]`} 
+                    className={`${controlBaseClass} min-h-[80px]`} 
                     placeholder="Notas para uso interno do administrador..." 
                 />
                 <p className="text-[10px] text-muted-foreground">Estas notas não são visíveis para o cliente.</p>
@@ -690,7 +692,7 @@ export const FieldForm: React.FC<FieldFormProps> = ({
             <button 
                 onClick={handleSave}
                 disabled={!canSave}
-                className="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-2.5 rounded-md text-sm font-bold uppercase tracking-wide disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-sm flex items-center justify-center gap-2 mt-2"
+                className="mt-2 flex h-10 w-full items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground py-2 rounded-md text-sm font-bold uppercase tracking-wide disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-sm"
             >
                 {initialField ? (
                     <><RotateCcw className="w-4 h-4" /> Atualizar Campo</>
@@ -702,5 +704,3 @@ export const FieldForm: React.FC<FieldFormProps> = ({
     </div>
   );
 };
-
-

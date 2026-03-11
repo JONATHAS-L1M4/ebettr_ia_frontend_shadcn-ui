@@ -40,7 +40,7 @@ export const TextField: React.FC<TextFieldProps> = ({ field, onChange }) => {
           <button 
             type="button"
             onClick={() => setIsExpanded(true)}
-            className="absolute right-2 top-2 text-muted-foreground hover:text-foreground opacity-0 group-hover:opacity-100 transition-all bg-card rounded p-0.5 hover:bg-muted"
+            className="absolute right-2 top-2 mt-0.5 rounded p-0.5 text-muted-foreground opacity-0 transition-all group-hover:opacity-100 hover:text-foreground"
             title="Expandir editor"
           >
             <Maximize2 className="w-3.5 h-3.5" />

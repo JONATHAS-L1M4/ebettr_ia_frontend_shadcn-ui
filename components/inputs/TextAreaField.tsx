@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { ConfigField } from '../../types';
-import { inputBaseClass } from './styles';
+import { controlBaseClass } from './styles';
 import { Maximize2 } from '../ui/Icons';
 import { ExpandedTextModal } from './ExpandedTextModal';
 
@@ -32,7 +32,7 @@ export const TextAreaField: React.FC<TextAreaFieldProps> = ({ field, onChange })
           rows={field.rows || 4}
           minLength={field.minLength}
           maxLength={field.maxLength}
-          className={`${inputBaseClass} resize-none pr-8`}
+          className={`${controlBaseClass} resize-none pr-8`}
           style={field.rows ? undefined : { height: '100px' }}
         />
 
@@ -40,7 +40,7 @@ export const TextAreaField: React.FC<TextAreaFieldProps> = ({ field, onChange })
         <button 
           type="button"
           onClick={() => setIsExpanded(true)}
-          className="absolute right-2 top-2 text-muted-foreground hover:text-foreground opacity-0 group-hover:opacity-100 transition-all bg-card rounded p-0.5 hover:bg-muted border border-transparent hover:border-border"
+          className="absolute right-2 top-2 mt-0.5 rounded p-0.5 text-muted-foreground opacity-0 transition-all group-hover:opacity-100 hover:text-foreground"
           title="Expandir editor"
         >
           <Maximize2 className="w-3.5 h-3.5" />

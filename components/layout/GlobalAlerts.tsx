@@ -197,13 +197,13 @@ export const GlobalAlerts: React.FC<GlobalAlertsProps> = ({ userRole }) => {
 
       {alerts.length > 1 && (
         <div className="flex justify-center rounded-lg border border-border bg-card">
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            onClick={() => setExpanded((prev) => !prev)}
-            className="h-9 gap-2 text-xs font-medium text-muted-foreground hover:bg-transparent hover:text-foreground"
-          >
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={() => setExpanded((prev) => !prev)}
+              className="h-10 gap-2 text-xs font-medium text-muted-foreground hover:bg-transparent hover:text-foreground"
+            >
             {expanded ? (
               <>
                 <ChevronUp className="h-4 w-4" />

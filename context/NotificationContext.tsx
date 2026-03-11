@@ -57,17 +57,40 @@ const NotificationItem: React.FC<{
     return () => window.clearTimeout(timer);
   }, [onClose]);
 
-  const iconMap = {
-    success: <CheckCircle2 className="h-4 w-4 text-zinc-300" />,
-    error: <AlertCircle className="h-4 w-4 text-zinc-300" />,
-    warning: <AlertTriangle className="h-4 w-4 text-zinc-300" />,
-    info: <Info className="h-4 w-4 text-zinc-300" />,
+  const toneMap: Record<
+    NotificationType,
+    { icon: React.ReactNode; iconClassName: string }
+  > = {
+    success: {
+      icon: <CheckCircle2 className="h-4 w-4" />,
+      iconClassName:
+        'border border-emerald-500/20 bg-emerald-500/10 text-emerald-400',
+    },
+    error: {
+      icon: <AlertCircle className="h-4 w-4" />,
+      iconClassName:
+        'border border-destructive/20 bg-destructive/10 text-destructive',
+    },
+    warning: {
+      icon: <AlertTriangle className="h-4 w-4" />,
+      iconClassName: 'border border-amber-500/20 bg-amber-500/10 text-amber-300',
+    },
+    info: {
+      icon: <Info className="h-4 w-4" />,
+      iconClassName: 'border border-border bg-muted/60 text-foreground',
+    },
   };
+
+  const currentTone = toneMap[notification.type];
 
   return (
     <Alert className="animate-scale-in">
       <div className="flex items-start gap-3">
-        <div className="mt-0.5 shrink-0">{iconMap[notification.type]}</div>
+        <div
+          className={`mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${currentTone.iconClassName}`}
+        >
+          {currentTone.icon}
+        </div>
         <div className="min-w-0">
           <AlertTitle>{notification.title}</AlertTitle>
           {notification.message && (
@@ -81,7 +104,7 @@ const NotificationItem: React.FC<{
         <button
           type="button"
           onClick={onClose}
-          className="flex h-7 w-7 items-center justify-center rounded-md text-zinc-500 transition hover:bg-white/5 hover:text-zinc-100"
+          className="flex h-7 w-7 items-center justify-center rounded-md border border-border bg-background text-muted-foreground transition hover:bg-muted hover:text-foreground"
           aria-label="Fechar notificacao"
         >
           <X className="h-4 w-4" />
@@ -125,7 +148,7 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({
       {isMounted &&
         createPortal(
           <div
-            className="pointer-events-none fixed inset-x-4 top-4 z-[2147483647] flex flex-col gap-3 sm:left-auto sm:w-full sm:max-w-sm"
+            className="pointer-events-none fixed inset-x-4 bottom-4 z-[2147483647] flex flex-col gap-3 sm:left-auto sm:right-4 sm:w-full sm:max-w-sm"
             aria-live="polite"
             aria-atomic="true"
           >

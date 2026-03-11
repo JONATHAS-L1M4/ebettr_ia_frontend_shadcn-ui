@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Users, Plus, Trash2, Mail, Shield, Ban, X, LifeBuoy, ChevronDown, CheckCircle2, Search, Lock, LockOpen, Loader2, User } from '../components/ui/Icons';
 import { useNotification } from '../context/NotificationContext';
-import { inputBaseClass } from '../components/inputs/styles';
+import { controlBaseClass, inputBaseClass } from '../components/inputs/styles';
 import { userService } from '../services/userService';
 import { ConfirmationModal } from '../components/shared/ConfirmationModal';
 import DarkPage from '../components/layout/DarkPage';
@@ -255,7 +255,7 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ currentUserEmail }) => {
                     </div>
                     <input 
                         type="text" 
-                        className="bg-background border border-input text-foreground text-sm rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background block w-full pl-10 h-9 placeholder:text-muted-foreground shadow-sm" 
+                        className="w-full px-3 py-2 bg-background border border-input rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background text-sm placeholder:text-muted-foreground shadow-sm text-foreground pl-10 h-9" 
                         placeholder="Buscar usuário..." 
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
@@ -268,7 +268,7 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ currentUserEmail }) => {
                 </div>
                 <input 
                     type="text" 
-                    className="bg-background border border-input text-foreground text-sm rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background block w-full pl-10 h-9 placeholder:text-muted-foreground shadow-sm" 
+                    className="w-full px-3 py-2 bg-background border border-input rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background text-sm placeholder:text-muted-foreground shadow-sm text-foreground pl-10 h-9" 
                     placeholder="Buscar usuário..." 
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
@@ -371,7 +371,7 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ currentUserEmail }) => {
                         <div className="space-y-1" ref={roleDropdownRef}>
                             <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Perfil de Acesso</label>
                             <div className="relative">
-                                <button type="button" disabled={isSubmitting} onClick={() => setIsRoleDropdownOpen(!isRoleDropdownOpen)} className={`${inputBaseClass} flex items-center justify-between text-left h-[38px] disabled:opacity-50`}>
+                                <button type="button" disabled={isSubmitting} onClick={() => setIsRoleDropdownOpen(!isRoleDropdownOpen)} className={`${controlBaseClass} flex items-center justify-between text-left h-[38px] disabled:opacity-50`}>
                                     <div className="flex items-center gap-2">
                                         {newRole === 'admin' ? <><Shield className="w-3.5 h-3.5 text-muted-foreground" /><span>Administrador</span></> : <><LifeBuoy className="w-3.5 h-3.5 text-muted-foreground" /><span>Suporte Técnico</span></>}
                                     </div>
@@ -379,13 +379,13 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ currentUserEmail }) => {
                                 </button>
                                 {isRoleDropdownOpen && (
                                     <div className="absolute top-full left-0 right-0 mt-1 bg-popover border border-border rounded-lg shadow-xl z-50 overflow-hidden animate-scale-in">
-                                        <button type="button" onClick={() => { setNewRole('admin'); setIsRoleDropdownOpen(false); }} className="w-full text-left px-3 py-2.5 hover:bg-muted text-sm text-muted-foreground flex items-center gap-2 transition-colors border-b border-border"><Shield className="w-3.5 h-3.5 text-muted-foreground" /><span>Administrador</span>{newRole === 'admin' && <CheckCircle2 className="w-3.5 h-3.5 text-green-500 ml-auto" />}</button>
-                                        <button type="button" onClick={() => { setNewRole('support'); setIsRoleDropdownOpen(false); }} className="w-full text-left px-3 py-2.5 hover:bg-muted text-sm text-muted-foreground flex items-center gap-2 transition-colors"><LifeBuoy className="w-3.5 h-3.5 text-muted-foreground" /><span>Suporte Técnico</span>{newRole === 'support' && <CheckCircle2 className="w-3.5 h-3.5 text-green-500 ml-auto" />}</button>
+                                        <button type="button" onClick={() => { setNewRole('admin'); setIsRoleDropdownOpen(false); }} className="flex h-10 w-full items-center gap-2 border-b border-border px-3 py-2 text-left text-sm text-muted-foreground transition-colors hover:bg-muted"><Shield className="w-3.5 h-3.5 text-muted-foreground" /><span>Administrador</span>{newRole === 'admin' && <CheckCircle2 className="w-3.5 h-3.5 text-green-500 ml-auto" />}</button>
+                                        <button type="button" onClick={() => { setNewRole('support'); setIsRoleDropdownOpen(false); }} className="flex h-10 w-full items-center gap-2 px-3 py-2 text-left text-sm text-muted-foreground transition-colors hover:bg-muted"><LifeBuoy className="w-3.5 h-3.5 text-muted-foreground" /><span>Suporte Técnico</span>{newRole === 'support' && <CheckCircle2 className="w-3.5 h-3.5 text-green-500 ml-auto" />}</button>
                                     </div>
                                 )}
                             </div>
                         </div>
-                        <button type="submit" disabled={!newEmail || !newName || isSubmitting} className="w-full py-2 bg-primary hover:bg-primary text-primary-foreground text-xs font-bold rounded-md transition-colors uppercase tracking-wide disabled:opacity-50 disabled:cursor-not-allowed mt-2 flex items-center justify-center gap-2">
+                        <button type="submit" disabled={!newEmail || !newName || isSubmitting} className="mt-2 flex h-10 w-full items-center justify-center gap-2 rounded-md bg-primary py-2 text-xs font-bold uppercase tracking-wide text-primary-foreground transition-colors hover:bg-primary disabled:opacity-50 disabled:cursor-not-allowed">
                             {isSubmitting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : null}
                             {isSubmitting ? 'Salvando...' : 'Conceder Acesso'}
                         </button>
@@ -412,5 +412,3 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ currentUserEmail }) => {
     </DarkPage>
   );
 };
-
-

@@ -5,9 +5,9 @@ import { SessionVolumeChart } from '../components/dashboard/SessionVolumeChart';
 import { FilterBar } from '../components/dashboard/FilterBar';
 import { SessionsTable } from '../components/sessions/SessionsTable';
 import { useNotification } from '../context/NotificationContext';
-import { fetchSessions, revokeSession, revokeSessionsBulk, blockUserSessions, unblockUserSessions } from '../services/sessionService';
+import { fetchSessions, revokeSession, revokeSessionsBulk, unblockUserSessions } from '../services/sessionService';
 import { ChartDataPoint, DashboardFiltersState } from '../components/dashboard/types';
-import { ShieldCheck, AlertOctagon, Users, Globe, Lock, Clock, LogOut, Loader2, X, Zap, Trash2, RefreshCw } from '../components/ui/Icons';
+import { ShieldCheck, AlertOctagon, Users, Globe, Clock, LogOut, Loader2, X, Zap, RefreshCw } from '../components/ui/Icons';
 import { ConfirmationModal } from '../components/shared/ConfirmationModal';
 import DarkPage from '../components/layout/DarkPage';
 
@@ -18,7 +18,7 @@ interface AdminSessionsProps {
 const AdminSessionsSkeleton = () => (
     <div className="flex flex-col gap-6 animate-pulse pb-12 max-w-7xl mx-auto">
         {/* Header Skeleton */}
-        <div className="flex flex-col gap-4 border-b border-border pb-4">
+        <div className="flex flex-col gap-4 border-b border-border pb-4 md:flex-row md:items-start md:justify-between">
             <div className="flex items-center gap-4">
                 <div className="w-10 h-10 bg-muted rounded-lg"></div>
                 <div className="space-y-2">
@@ -155,7 +155,11 @@ export const AdminSessions: React.FC<AdminSessionsProps> = ({ onLogout }) => {
 
   const isFetchingRef = React.useRef(false);
   const loadData = async (reset = false) => {
-      if (isFetchingRef.current) return;
+      if (isFetchingRef.current) {
+          setLoading(false);
+          setIsLoadingMore(false);
+          return;
+      }
 
       const pageToFetch = reset ? 1 : currentPage + 1;
       
@@ -250,7 +254,7 @@ export const AdminSessions: React.FC<AdminSessionsProps> = ({ onLogout }) => {
               setIsBulkProcessing(false);
           },
           true,
-          'Derrubar Selecionadas'
+          'Derrubar'
       );
   };
 
@@ -387,7 +391,7 @@ export const AdminSessions: React.FC<AdminSessionsProps> = ({ onLogout }) => {
     <DarkPage className="min-h-[calc(100vh-4rem)]">
     <div className="flex flex-col gap-6 animate-fade-in relative pb-12 max-w-7xl mx-auto">
         {/* Header */}
-        <div className="flex flex-col gap-4 border-b border-border pb-4">
+        <div className="flex flex-col gap-4 border-b border-border pb-4 md:flex-row md:items-start md:justify-between">
             <div className="flex items-center gap-4">
                 <div className="w-10 h-10 border border-border rounded-lg flex items-center justify-center text-foreground bg-muted">
                     <ShieldCheck className="w-5 h-5" />
@@ -479,9 +483,9 @@ export const AdminSessions: React.FC<AdminSessionsProps> = ({ onLogout }) => {
 
         {/* Bulk Action Bar - Standardized Flat System Style (Positioned Above Table) */}
         {selectedSessionIds.length > 0 && (
-            <div className="bg-card border border-border p-4 rounded-lg animate-fade-in flex flex-col sm:flex-row items-center justify-between gap-4 -mb-4 z-10 mx-1">
+            <div className="animate-fade-in mx-1 -mb-4 z-10 flex flex-col gap-4 rounded-xl border border-border bg-card p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-muted border border-border rounded-lg flex items-center justify-center">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-muted/60">
                         <Users className="w-5 h-5 text-muted-foreground" />
                     </div>
                     <div>
@@ -490,10 +494,10 @@ export const AdminSessions: React.FC<AdminSessionsProps> = ({ onLogout }) => {
                     </div>
                 </div>
                 
-                <div className="flex items-center gap-2 w-full sm:w-auto">
+                <div className="flex w-full flex-col items-stretch gap-2 sm:w-auto sm:flex-row sm:items-center">
                     <button 
                         onClick={() => setSelectedSessionIds([])}
-                        className="flex-1 sm:flex-none px-4 py-2 text-xs font-bold text-muted-foreground hover:text-foreground transition-colors flex items-center justify-center gap-2"
+                        className="flex h-10 flex-1 items-center justify-center gap-2 rounded-md border border-border bg-background px-4 py-2 text-xs font-bold text-muted-foreground transition-all hover:bg-muted hover:text-foreground sm:flex-none"
                     >
                         <X className="w-4 h-4" /> Limpar Seleção
                     </button>
@@ -501,7 +505,7 @@ export const AdminSessions: React.FC<AdminSessionsProps> = ({ onLogout }) => {
                     <button 
                         onClick={handleRevokeAllFiltered}
                         disabled={isBulkProcessing}
-                        className="flex-1 sm:flex-none px-4 py-2 text-xs font-bold text-amber-300 hover:bg-amber-950/40 rounded-md transition-all flex items-center justify-center gap-2 border border-amber-900/50"
+                        className="flex h-10 flex-1 items-center justify-center gap-2 rounded-md border border-border bg-background px-4 py-2 text-xs font-bold text-foreground transition-all hover:bg-muted sm:flex-none"
                         title="Derrubar todas as sessões que batem com o filtro atual usando API bulk"
                     >
                         <Zap className="w-4 h-4" /> Revogar Tudo (Filtro)
@@ -510,7 +514,7 @@ export const AdminSessions: React.FC<AdminSessionsProps> = ({ onLogout }) => {
                     <button 
                         onClick={handleBulkRevokeSelected}
                         disabled={isBulkProcessing}
-                        className="flex-1 sm:flex-none px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md text-xs font-bold transition-all flex items-center justify-center gap-2"
+                        className="flex h-10 flex-1 items-center justify-center gap-2 rounded-md border border-border bg-muted/60 px-6 py-2 text-xs font-bold text-foreground transition-all hover:bg-muted sm:flex-none"
                     >
                         {isBulkProcessing ? <Loader2 className="w-4 h-4 animate-spin" /> : <LogOut className="w-4 h-4" />}
                         Derrubar Selecionadas
@@ -526,6 +530,7 @@ export const AdminSessions: React.FC<AdminSessionsProps> = ({ onLogout }) => {
             onBlock={() => {}} 
             onUnblock={handleUnblock}
             hasMore={hasMore}
+            isLoadingMore={isLoadingMore}
             onLoadMore={() => loadData(false)}
             selectedIds={selectedSessionIds}
             onSelectionChange={setSelectedSessionIds}
@@ -544,4 +549,3 @@ export const AdminSessions: React.FC<AdminSessionsProps> = ({ onLogout }) => {
     </DarkPage>
   );
 };
-

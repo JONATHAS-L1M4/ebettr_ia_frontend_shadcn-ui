@@ -24,7 +24,7 @@ export const NotFound: React.FC = () => {
         <div className="flex flex-col sm:flex-row gap-3 w-full">
           <button 
             onClick={() => navigate(-1)}
-            className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 border border-border text-muted-foreground font-medium rounded-lg hover:bg-muted hover:text-foreground transition-colors"
+            className="flex h-10 flex-1 items-center justify-center gap-2 px-4 py-2 border border-border text-muted-foreground font-medium rounded-lg hover:bg-muted hover:text-foreground transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             Voltar
@@ -32,7 +32,7 @@ export const NotFound: React.FC = () => {
           
           <button 
             onClick={() => navigate('/agents')}
-            className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-primary text-primary-foreground font-medium rounded-lg hover:bg-primary/90 transition-colors shadow-sm"
+            className="flex h-10 flex-1 items-center justify-center gap-2 px-4 py-2 bg-primary text-primary-foreground font-medium rounded-lg hover:bg-primary/90 transition-colors shadow-sm"
           >
             <Home className="w-4 h-4" />
             Ir para Início
@@ -49,4 +49,3 @@ export const NotFound: React.FC = () => {
 };
 
 export default NotFound;
-

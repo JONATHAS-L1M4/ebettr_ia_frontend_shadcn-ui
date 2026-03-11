@@ -21,7 +21,7 @@ import {
   Mail,
   LayoutGrid,
 } from '../ui/Icons';
-import { inputBaseClass } from '../inputs/styles';
+import { controlBaseClass, inputBaseClass } from '../inputs/styles';
 
 interface ModuleSettingsProps {
   title: string;
@@ -89,6 +89,13 @@ export const ModuleSettings: React.FC<ModuleSettingsProps> = ({
   }, [description]);
 
   const labelClass = 'text-xs font-semibold text-muted-foreground uppercase tracking-wide flex items-center gap-1';
+  const getWidthTabClass = (isActive: boolean) =>
+    [
+      'flex flex-1 h-full items-center justify-center rounded-md px-3 py-1.5 text-xs font-semibold tracking-wide transition-all duration-200 ease-out',
+      isActive
+        ? 'bg-[#2e2e2e] text-foreground shadow-[0_8px_24px_-16px_rgba(0,0,0,0.9)]'
+        : 'text-muted-foreground hover:bg-card/85 hover:text-foreground'
+    ].join(' ');
 
   return (
     <div className="space-y-4">
@@ -149,7 +156,7 @@ export const ModuleSettings: React.FC<ModuleSettingsProps> = ({
           onChange={e => setDescription(e.target.value)}
           maxLength={300}
           rows={2}
-          className={`${inputBaseClass} resize-none overflow-hidden`}
+          className={`${controlBaseClass} resize-none overflow-hidden`}
           placeholder="Breve descricao do proposito deste modulo..."
         />
       </div>
@@ -159,40 +166,25 @@ export const ModuleSettings: React.FC<ModuleSettingsProps> = ({
           <label className={labelClass}>
             <LayoutGrid className="w-3 h-3" /> Largura Padrao
           </label>
-          <div className="bg-muted/60 p-1 rounded-lg flex items-center gap-1 shadow-inner w-full border border-border">
+          <div className="flex h-[36px] w-full items-center gap-2 rounded-lg border border-border bg-muted/60 p-1 shadow-inner">
             <button
               type="button"
               onClick={() => setWidth('33%')}
-              className={`
-                flex-1 flex items-center justify-center px-3 py-1.5 rounded-md text-xs font-semibold uppercase tracking-wide transition-all duration-300 ease-out
-                ${width === '33%'
-                  ? 'bg-card border border-border text-foreground shadow-sm transform scale-100'
-                  : 'text-muted-foreground hover:text-foreground hover:bg-accent'}
-              `}
+              className={getWidthTabClass(width === '33%')}
             >
               33% (1/3)
             </button>
             <button
               type="button"
               onClick={() => setWidth('66%')}
-              className={`
-                flex-1 flex items-center justify-center px-3 py-1.5 rounded-md text-xs font-semibold uppercase tracking-wide transition-all duration-300 ease-out
-                ${width === '66%'
-                  ? 'bg-card border border-border text-foreground shadow-sm transform scale-100'
-                  : 'text-muted-foreground hover:text-foreground hover:bg-accent'}
-              `}
+              className={getWidthTabClass(width === '66%')}
             >
               66% (2/3)
             </button>
             <button
               type="button"
               onClick={() => setWidth('100%')}
-              className={`
-                flex-1 flex items-center justify-center px-3 py-1.5 rounded-md text-xs font-semibold uppercase tracking-wide transition-all duration-300 ease-out
-                ${width === '100%'
-                  ? 'bg-card border border-border text-foreground shadow-sm transform scale-100'
-                  : 'text-muted-foreground hover:text-foreground hover:bg-accent'}
-              `}
+              className={getWidthTabClass(width === '100%')}
             >
               100% (Full)
             </button>

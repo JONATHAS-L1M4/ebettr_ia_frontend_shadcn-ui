@@ -164,11 +164,11 @@ export const ModuleEditor: React.FC<ModuleEditorProps> = ({ onClose, onSave, ini
            </div>
         </div>
         <div className="flex gap-3">
-            <button onClick={onClose} className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors hover:bg-muted rounded-md">Cancelar</button>
+            <button onClick={onClose} className="flex h-10 items-center justify-center rounded-md px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">Cancelar</button>
             <button 
               onClick={executeSave}
               disabled={!title || fields.length === 0}
-              className="px-6 py-2 bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-bold rounded-md disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 transition-all transform active:scale-95"
+              className="h-10 px-6 py-2 bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-bold rounded-md disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 transition-all transform active:scale-95"
             >
               <Save className="w-4 h-4" /> Salvar Módulo
             </button>
@@ -277,4 +277,3 @@ export const ModuleEditor: React.FC<ModuleEditorProps> = ({ onClose, onSave, ini
     </div>
   );
 };
-

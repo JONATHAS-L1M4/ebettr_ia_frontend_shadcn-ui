@@ -244,7 +244,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
       }
   };
 
-  const inputClass = "w-full px-3 py-2 rounded-md border border-input bg-background text-foreground text-sm placeholder:text-muted-foreground shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background";
+  const inputClass = "w-full px-3 py-2 bg-background border border-input rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background text-sm placeholder:text-muted-foreground shadow-sm text-foreground";
 
   return (
     <DarkPage className="min-h-[calc(100vh-4rem)]">
@@ -338,7 +338,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
                                 <button 
                                     type="button"
                                     onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                                    className="absolute right-3 top-3 text-muted-foreground hover:text-foreground transition-colors"
+                                    className="absolute right-3 top-3 -mt-0.5 text-muted-foreground hover:text-foreground transition-colors"
                                 >
                                     {showCurrentPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                                 </button>
@@ -358,7 +358,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
                                     <button 
                                         type="button"
                                         onClick={() => setShowNewPassword(!showNewPassword)}
-                                        className="absolute right-3 top-3 text-muted-foreground hover:text-foreground transition-colors"
+                                        className="absolute right-3 top-3 -mt-0.5 text-muted-foreground hover:text-foreground transition-colors"
                                     >
                                         {showNewPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                                     </button>
@@ -399,7 +399,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
                                     <button 
                                         type="button"
                                         onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                        className="absolute right-3 top-3 text-muted-foreground hover:text-foreground transition-colors"
+                                        className="absolute right-3 top-3 -mt-0.5 text-muted-foreground hover:text-foreground transition-colors"
                                     >
                                         {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                                     </button>
@@ -465,7 +465,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
             <div className="p-6 bg-muted border-t border-border flex items-center justify-end gap-3 rounded-b-lg">
                 <button 
                     onClick={handleSaveGeneral}
-                    className="px-6 py-2 bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-bold rounded-md transition-all flex items-center gap-2"
+                    className="h-10 px-6 py-2 bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-bold rounded-md transition-all flex items-center gap-2"
                 >
                     <Save className="w-4 h-4" />
                     Salvar Alterações
@@ -576,7 +576,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
                         <button 
                             onClick={handleVerify2FA}
                             disabled={verificationCode.length !== 6 || isVerifying || isLoadingSetup}
-                            className="bg-primary text-primary-foreground px-6 py-2 rounded-md text-xs font-bold hover:bg-primary disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 uppercase tracking-wide shadow-sm"
+                            className="h-10 bg-primary text-primary-foreground px-6 py-2 rounded-md text-xs font-bold hover:bg-primary disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 uppercase tracking-wide shadow-sm"
                         >
                             {isVerifying ? <Loader2 className="w-3 h-3 animate-spin" /> : <CheckCircle2 className="w-3 h-3" />}
                             Verificar e Ativar
@@ -591,8 +591,8 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
             <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4 animate-fade-in">
                 <div className="bg-card rounded-xl shadow-2xl border border-border w-full max-w-md overflow-hidden animate-scale-in ring-1 ring-border">
                     <div className="px-6 py-4 border-b border-border flex items-center justify-between bg-muted">
-                        <h3 className="text-sm font-bold text-foreground uppercase tracking-wide flex items-center gap-2">
-                            <Lock className="w-4 h-4" /> Confirmar Desativação
+                        <h3 className="text-sm font-bold text-foreground uppercase tracking-wide">
+                            Confirmar Desativação
                         </h3>
                         <button onClick={() => setIsResetting2FA(false)} className="text-muted-foreground hover:text-foreground"><X className="w-5 h-5" /></button>
                     </div>
@@ -612,7 +612,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
                                 <button 
                                     type="button"
                                     onClick={() => setShowResetPassword(!showResetPassword)}
-                                    className="absolute right-3 top-3 text-muted-foreground hover:text-foreground transition-colors"
+                                    className="absolute right-3 top-3 -mt-0.5 text-muted-foreground hover:text-foreground transition-colors"
                                 >
                                     {showResetPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                                 </button>
@@ -629,9 +629,9 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
                         <button 
                             onClick={handleConfirmReset2FA}
                             disabled={!resetPassword || isResettingLoading}
-                            className="bg-red-600 text-white px-6 py-2 rounded-md text-xs font-bold hover:bg-red-700 disabled:opacity-50 transition-all flex items-center gap-2"
+                            className="h-10 bg-red-600 text-white px-6 py-2 rounded-md text-xs font-bold hover:bg-red-700 disabled:opacity-50 transition-all flex items-center gap-2"
                         >
-                            {isResettingLoading ? <Loader2 className="w-3 h-3 animate-spin" /> : <ShieldCheck className="w-3 h-3" />}
+                            {isResettingLoading && <Loader2 className="w-3 h-3 animate-spin" />}
                             Desativar 2FA
                         </button>
                     </div>
@@ -642,4 +642,3 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
     </DarkPage>
   );
 };
-

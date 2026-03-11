@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Company } from '../types';
-import { Building2, Plus, Trash2, Globe, Mail, Phone, X, Save, Edit2, Search, Users, Loader2, AlertTriangle, User, Bot } from '../components/ui/Icons';
+import { Building2, Plus, Globe, Mail, Phone, X, Save, Edit2, Search, Users, Loader2, User, Bot } from '../components/ui/Icons';
 import { useNotification } from '../context/NotificationContext';
 import { inputBaseClass } from '../components/inputs/styles';
 import { DashedAddCard } from '../components/ui/DashedAddCard';
@@ -10,6 +10,7 @@ import { companyService } from '../services/companyService';
 import { userService } from '../services/userService';
 import { agentService } from '../services/agentService';
 import { DeleteWithCodeModal } from '../components/shared/DeleteWithCodeModal';
+import { DangerZoneSection } from '../components/shared/DangerZoneSection';
 import DarkPage from '../components/layout/DarkPage';
 
 interface CompanyWithStats extends Company {
@@ -290,7 +291,7 @@ export const Companies: React.FC = () => {
                <button 
                  type="submit"
                  disabled={isSubmitting}
-                 className="px-6 py-2 bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-bold rounded-md transition-all flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                 className="h-10 px-6 py-2 bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-bold rounded-md transition-all flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                >
                  {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
                  Salvar Cadastro
@@ -300,29 +301,19 @@ export const Companies: React.FC = () => {
 
         {/* DANGER ZONE - Only when Editing */}
         {editingId && (
-            <div className="mt-8 pt-8 border-t border-border animate-fade-in">
-                <h3 className="text-xs font-bold text-red-600 uppercase tracking-widest mb-4 flex items-center gap-2">
-                    <AlertTriangle className="w-4 h-4" /> Zona de Perigo
-                </h3>
-                <div className="border border-red-900/50 bg-red-950/40 rounded-lg p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    <div>
-                        <h4 className="text-sm font-bold text-foreground">Excluir Empresa</h4>
-                        <p className="text-xs text-muted-foreground mt-1">
-                            Esta ação excluirá permanentemente o cadastro de <strong>{formName}</strong>. 
-                            Certifique-se de que não há usuários dependentes.
-                        </p>
-                    </div>
-                    <button 
-                        type="button"
-                        onClick={() => setIsDeleteModalOpen(true)}
-                        disabled={isSubmitting}
-                        className="px-4 py-2 bg-card border border-red-200 text-red-600 text-xs font-bold rounded-md hover:bg-red-600 hover:text-white transition-all flex items-center justify-center gap-2 shrink-0 disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                        {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
-                        Excluir Empresa
-                    </button>
-                </div>
-            </div>
+            <DangerZoneSection
+                title="Excluir Empresa"
+                description={
+                    <>
+                        Esta ação excluirá permanentemente o cadastro de <strong>{formName}</strong>. Certifique-se de que não há usuários dependentes.
+                    </>
+                }
+                actionLabel="Excluir Empresa"
+                loadingLabel="Excluindo..."
+                onAction={() => setIsDeleteModalOpen(true)}
+                disabled={isSubmitting}
+                isLoading={isSubmitting}
+            />
         )}
 
         <DeleteWithCodeModal 
@@ -366,7 +357,7 @@ export const Companies: React.FC = () => {
                         </div>
                         <input 
                             type="text" 
-                            className="bg-background border border-input text-foreground text-sm rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background block w-full pl-10 h-9 placeholder:text-muted-foreground shadow-sm" 
+                            className="w-full px-3 py-2 bg-background border border-input rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background text-sm placeholder:text-muted-foreground shadow-sm text-foreground pl-10 h-9" 
                             placeholder="Buscar empresa..." 
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
@@ -375,7 +366,7 @@ export const Companies: React.FC = () => {
 
                     <button 
                         onClick={() => setIsFormOpen(true)}
-                        className="flex items-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground px-4 h-9 rounded-md text-xs font-bold uppercase tracking-wide transition-all border border-transparent whitespace-nowrap shadow-sm"
+                        className="flex h-10 items-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground px-4 rounded-md text-xs font-bold uppercase tracking-wide transition-all border border-transparent whitespace-nowrap shadow-sm"
                     >
                         <Plus className="w-4 h-4" />
                         <span className="hidden sm:inline">Nova Empresa</span>
@@ -469,4 +460,3 @@ export const Companies: React.FC = () => {
     </DarkPage>
   );
 };
-

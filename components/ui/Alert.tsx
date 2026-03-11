@@ -11,8 +11,8 @@ interface AlertProps extends React.ComponentProps<'div'> {
 }
 
 const alertVariants: Record<AlertVariant, string> = {
-  default: 'border-white/10 bg-zinc-950/95 text-zinc-50',
-  destructive: 'border-white/10 bg-zinc-950/95 text-zinc-50',
+  default: 'border-border bg-card text-foreground',
+  destructive: 'border-destructive/20 bg-card text-foreground',
 };
 
 export function Alert({
@@ -25,7 +25,7 @@ export function Alert({
       data-slot="alert"
       role="alert"
       className={cn(
-        'relative w-full rounded-2xl border px-4 py-3 text-left text-sm shadow-[0_24px_80px_-40px_rgba(0,0,0,1)] backdrop-blur',
+        'relative w-full rounded-xl border px-4 py-3 text-left text-sm shadow-sm',
         alertVariants[variant],
         className
       )}
@@ -41,7 +41,7 @@ export function AlertTitle({
   return (
     <div
       data-slot="alert-title"
-      className={cn('pr-8 text-sm font-semibold tracking-tight text-zinc-50', className)}
+      className={cn('pr-8 text-sm font-semibold tracking-tight text-foreground', className)}
       {...props}
     />
   );
@@ -55,7 +55,7 @@ export function AlertDescription({
     <div
       data-slot="alert-description"
       className={cn(
-        'text-sm leading-relaxed text-zinc-400',
+        'text-sm leading-relaxed text-muted-foreground',
         className
       )}
       {...props}

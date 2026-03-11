@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { ConfigSection, ConfigField } from '../types';
 // Adicionando Loader2 ao import de ícones
-import { Brain, Settings, MessageSquare, Shield, Database, Pencil, Trash2, CircleHelp, X, RotateCcw, Cpu, Cloud, Code, Zap, Globe, Activity, Terminal, Check, Key, Lock, ChevronDown, ChevronUp, AlertTriangle, Layers, Box, User, Mail, ArrowUp, ArrowDown } from './ui/Icons';
+import { Brain, Settings, MessageSquare, Shield, Database, Pencil, Trash2, CircleHelp, X, RotateCcw, Cpu, Cloud, Code, Zap, Globe, Activity, Terminal, Key, Lock, ChevronDown, ChevronUp, Layers, Box, User, Mail, ArrowUp, ArrowDown } from './ui/Icons';
 import { useNotification } from '../context/NotificationContext';
 import { N8nWorkflow } from '../services/n8nService';
 import SpotlightCard from './ui/SpotlightCard';
@@ -465,15 +465,15 @@ const ConfigCard: React.FC<ConfigCardProps> = ({ section, onEdit, onDelete, onMo
                                                 <div className="flex items-center gap-1">
                                                     <button 
                                                         onClick={() => handleResetField(field.id)}
-                                                        className="flex-1 flex items-center justify-center gap-1 bg-primary text-primary-foreground p-1 rounded hover:bg-primary/90 transition-colors text-[10px] font-bold"
+                                                        className="flex-1 bg-primary text-primary-foreground p-1 rounded hover:bg-primary/90 transition-colors text-[10px] font-bold"
                                                     >
-                                                        <Check className="w-3 h-3" /> Sim
+                                                        Sim
                                                     </button>
                                                     <button 
                                                         onClick={() => setConfirmResetFieldId(null)}
-                                                        className="flex-1 flex items-center justify-center gap-1 bg-secondary text-secondary-foreground p-1 rounded hover:bg-accent transition-colors text-[10px] font-bold"
+                                                        className="flex-1 bg-secondary text-secondary-foreground p-1 rounded hover:bg-accent transition-colors text-[10px] font-bold"
                                                     >
-                                                        <X className="w-3 h-3" /> Não
+                                                        Não
                                                     </button>
                                                 </div>
                                             </div>
@@ -520,9 +520,6 @@ const ConfigCard: React.FC<ConfigCardProps> = ({ section, onEdit, onDelete, onMo
         {showSaveConfirmation && (
             <div className="absolute inset-0 z-50 bg-background/90 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in rounded-xl">
                 <div className="text-center max-w-[280px] animate-scale-in">
-                    <div className="w-10 h-10 bg-muted/40 rounded-full flex items-center justify-center mx-auto mb-3 text-foreground border border-border">
-                        <AlertTriangle className="w-5 h-5" />
-                    </div>
                     <h4 className="text-sm font-bold text-foreground">Salvar Credenciais?</h4>
                     <p className="text-xs text-muted-foreground mt-1 mb-4 leading-relaxed">
                         Isso pode interromper a conexão do agente com serviços externos.
@@ -536,9 +533,9 @@ const ConfigCard: React.FC<ConfigCardProps> = ({ section, onEdit, onDelete, onMo
                         </button>
                         <button 
                             onClick={executeSave}
-                            className="px-3 py-1.5 bg-primary text-primary-foreground text-xs font-bold rounded-md hover:bg-primary/90 transition-colors uppercase tracking-wide flex items-center gap-1"
+                            className="px-3 py-1.5 bg-primary text-primary-foreground text-xs font-bold rounded-md hover:bg-primary/90 transition-colors uppercase tracking-wide"
                         >
-                            <Check className="w-3 h-3" /> Confirmar
+                            Confirmar
                         </button>
                     </div>
                 </div>
@@ -590,4 +587,3 @@ const ConfigCard: React.FC<ConfigCardProps> = ({ section, onEdit, onDelete, onMo
 };
 
 export default ConfigCard;
-

@@ -140,8 +140,8 @@ export const AccessManager: React.FC<AccessManagerProps> = ({
   return (
     <div className="space-y-4">
       {!readonly && (
-        <div className="flex items-start gap-3 md:flex-row md:items-end">
-          <div className="w-full flex-1 space-y-1" ref={dropdownRef}>
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-[minmax(0,1fr)_auto] md:items-end">
+          <div className="w-full space-y-1.5" ref={dropdownRef}>
             <label className="ml-1 text-xs font-semibold uppercase tracking-wide text-foreground">
               Selecione Usuario
             </label>
@@ -160,12 +160,12 @@ export const AccessManager: React.FC<AccessManagerProps> = ({
                 }}
                 onFocus={() => setIsDropdownOpen(true)}
                 placeholder={
-                  selectedCompany ? `Buscar em ${selectedCompany}...` : 'Buscar usuario...'
+                  selectedCompany ? `Buscar usuario em ${selectedCompany}...` : 'Buscar usuario por email...'
                 }
                 className={`${inputBaseClass} pl-9 ${
                   isDisabled
                     ? 'cursor-not-allowed border-border bg-muted text-muted-foreground'
-                    : 'bg-card'
+                    : 'bg-background'
                 }`}
                 onKeyDown={(e) => e.key === 'Enter' && handleAdd(e)}
                 autoComplete="off"
@@ -173,13 +173,13 @@ export const AccessManager: React.FC<AccessManagerProps> = ({
               />
 
               {isDropdownOpen && filteredOptions.length > 0 && (
-                <div className="absolute left-0 right-0 top-full z-50 mt-1 max-h-48 overflow-y-auto overflow-hidden rounded-lg border border-border bg-popover shadow-xl animate-scale-in">
+                <div className="absolute left-0 right-0 top-full z-50 mt-1 max-h-48 overflow-hidden overflow-y-auto rounded-lg border border-border bg-popover shadow-xl animate-scale-in">
                   {filteredOptions.map((user) => (
                     <button
                       key={user.email}
                       type="button"
                       onClick={() => handleSelectUser(user.email)}
-                      className="flex w-full items-center justify-between border-b border-border px-4 py-2 text-left text-sm text-popover-foreground transition-colors hover:bg-accent hover:text-accent-foreground last:border-0"
+                      className="flex w-full items-center justify-between border-b border-border px-4 py-2 text-left text-sm text-popover-foreground transition-colors hover:bg-muted/40 hover:text-foreground last:border-0"
                     >
                       <span className="truncate font-medium">{user.email}</span>
                       {user.company && (
@@ -198,15 +198,14 @@ export const AccessManager: React.FC<AccessManagerProps> = ({
             type="button"
             onClick={handleAdd}
             disabled={isDisabled}
-            className={`flex h-[34px] w-full items-center justify-center gap-2 rounded-md px-4 py-1 text-xs font-bold uppercase tracking-wide shadow-sm transition-colors md:w-auto ${
+            className={`flex h-10 w-full items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-bold transition-colors md:w-auto ${
               isDisabled
                 ? 'cursor-not-allowed bg-muted text-muted-foreground'
                 : 'bg-primary text-primary-foreground hover:bg-primary/90'
             }`}
           >
             <Plus className="h-3.5 w-3.5" />
-            <span className="md:hidden">Adicionar</span>
-            <span className="hidden md:inline">Adicionar</span>
+            <span>Adicionar</span>
           </button>
         </div>
       )}
@@ -215,7 +214,7 @@ export const AccessManager: React.FC<AccessManagerProps> = ({
         <p className="ml-1 text-[10px] font-bold text-destructive">{error}</p>
       )}
 
-      <div className="overflow-hidden rounded-lg border border-border bg-card/80">
+      <div className="overflow-hidden rounded-lg border border-border bg-panel/50 shadow-sm">
         {rules.length === 0 ? (
           <div className="p-6 text-center text-muted-foreground">
             <User className="mx-auto mb-2 h-8 w-8 opacity-20" />

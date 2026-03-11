@@ -1,7 +1,7 @@
 
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { UserSession } from '../../types';
-import { Shield, Monitor, Globe, Ban, LogOut, CheckCircle2, MapPin, Loader2, Smartphone, Laptop, CheckSquare, Square, X } from '../ui/Icons';
+import { Globe, LogOut, MapPin, Loader2, Smartphone, Laptop, X, ChevronDown } from '../ui/Icons';
 
 interface SessionsTableProps {
   sessions: UserSession[];
@@ -10,6 +10,7 @@ interface SessionsTableProps {
   onBlock: (email: string) => void;
   onUnblock: (email: string) => void;
   hasMore?: boolean;
+  isLoadingMore?: boolean;
   onLoadMore?: () => void;
   // Multi-selection props
   selectedIds: string[];
@@ -20,17 +21,24 @@ export const SessionsTable: React.FC<SessionsTableProps> = ({
   sessions, 
   onRevoke, 
   revokingId, 
-  onUnblock,
   hasMore = false,
+  isLoadingMore = false,
   onLoadMore,
   selectedIds,
   onSelectionChange
 }) => {
   
   const [mapLocation, setMapLocation] = useState<{lat: number, lng: number, label: string} | null>(null);
+  const selectAllRef = useRef<HTMLInputElement | null>(null);
 
   const isAllSelected = sessions.length > 0 && selectedIds.length === sessions.length;
   const isPartialSelected = selectedIds.length > 0 && selectedIds.length < sessions.length;
+
+  useEffect(() => {
+    if (selectAllRef.current) {
+      selectAllRef.current.indeterminate = isPartialSelected;
+    }
+  }, [isPartialSelected]);
 
   const handleSelectAll = () => {
     if (isAllSelected) {
@@ -80,13 +88,6 @@ export const SessionsTable: React.FC<SessionsTableProps> = ({
                 <p className="text-xs text-muted-foreground font-light hidden sm:block">Monitoramento de acesso em tempo real.</p>
                 <p className="text-[10px] text-muted-foreground font-light sm:hidden mt-0.5">{sessions.length} visualizados</p>
             </div>
-            {selectedIds.length > 0 && (
-                <div className="animate-fade-in bg-primary/10 border border-primary/20 px-3 py-1 rounded-full">
-                    <span className="text-[10px] font-bold text-primary uppercase tracking-widest">
-                        {selectedIds.length} selecionadas
-                    </span>
-                </div>
-            )}
         </div>
         
         <div className="overflow-x-auto">
@@ -94,12 +95,13 @@ export const SessionsTable: React.FC<SessionsTableProps> = ({
                 <thead>
                     <tr className="bg-muted border-b border-border text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
                         <th className="px-5 py-3 w-10">
-                            <button 
-                                onClick={handleSelectAll}
-                                className="text-muted-foreground hover:text-primary transition-colors focus:outline-none"
-                            >
-                                {isAllSelected ? <CheckSquare className="w-4 h-4 text-primary" /> : isPartialSelected ? <CheckSquare className="w-4 h-4 text-primary" /> : <Square className="w-4 h-4" />}
-                            </button>
+                            <input
+                                ref={selectAllRef}
+                                type="checkbox"
+                                className="rounded border-border bg-background text-foreground focus:ring-ring cursor-pointer"
+                                checked={isAllSelected}
+                                onChange={handleSelectAll}
+                            />
                         </th>
                         <th className="px-5 py-3">Status</th>
                         <th className="px-5 py-3">Usuário / IP</th>
@@ -114,41 +116,29 @@ export const SessionsTable: React.FC<SessionsTableProps> = ({
                     {sessions.map((session) => {
                         const isSelected = selectedIds.includes(session.id);
                         return (
-                        <tr key={session.id} className={`hover:bg-muted transition-colors group ${isSelected ? 'bg-accent' : ''} ${session.status === 'blocked' ? 'bg-red-950/40' : ''}`}>
+                        <tr key={session.id} className={`hover:bg-muted transition-colors group ${isSelected ? 'bg-accent' : ''}`}>
                             {/* SELECTION */}
                             <td className="px-5 py-3">
-                                <button 
-                                    onClick={() => handleSelectRow(session.id)}
-                                    className={`transition-colors focus:outline-none ${isSelected ? 'text-primary' : 'text-muted-foreground group-hover:text-foreground'}`}
-                                >
-                                    {isSelected ? <CheckSquare className="w-4 h-4" /> : <Square className="w-4 h-4" />}
-                                </button>
+                                <input
+                                    type="checkbox"
+                                    className="rounded border-border bg-background text-foreground focus:ring-ring cursor-pointer"
+                                    checked={isSelected}
+                                    onChange={() => handleSelectRow(session.id)}
+                                />
                             </td>
 
                             {/* STATUS */}
                             <td className="px-5 py-3 whitespace-nowrap">
                                 {session.status === 'active' && (
-                                    <div className="flex items-center gap-2.5">
-                                        <div className="relative flex items-center justify-center">
-                                            <div className={`w-2 h-2 rounded-full ${session.isOnline ? 'bg-emerald-950/400' : 'bg-amber-950/400'}`}></div>
-                                            {session.isOnline && <div className="absolute w-2 h-2 rounded-full bg-emerald-950/400 animate-ping opacity-20"></div>}
-                                        </div>
-                                        <span className="text-xs font-semibold text-foreground">
-                                            {session.isOnline ? 'Online Agora' : 'Ativa'}
-                                        </span>
-                                    </div>
+                                    <span className="text-xs font-semibold text-foreground">
+                                        {session.isOnline ? 'Online Agora' : 'Ativa'}
+                                    </span>
                                 )}
                                 {session.status === 'revoked' && (
-                                    <div className="flex items-center gap-2">
-                                        <div className="w-2 h-2 rounded-full bg-muted-foreground"></div>
-                                        <span className="text-xs font-medium text-muted-foreground">Encerrada</span>
-                                    </div>
+                                    <span className="text-xs font-medium text-muted-foreground">Encerrada</span>
                                 )}
                                 {session.status === 'blocked' && (
-                                    <div className="flex items-center gap-2">
-                                        <div className="w-2 h-2 rounded-full bg-red-950/400"></div>
-                                        <span className="text-xs font-semibold text-red-400">Bloqueada</span>
-                                    </div>
+                                    <span className="text-xs font-semibold text-zinc-300">Bloqueada</span>
                                 )}
                             </td>
 
@@ -243,20 +233,6 @@ export const SessionsTable: React.FC<SessionsTableProps> = ({
                                             )}
                                         </button>
                                     )}
-                                    {session.status === 'blocked' && (
-                                        <button 
-                                            type="button"
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                e.stopPropagation();
-                                                onUnblock(session.email);
-                                            }}
-                                            className="p-1.5 text-green-400 hover:text-green-300 hover:bg-green-950/40 rounded-md transition-all inline-flex items-center justify-center"
-                                            title="Desbloquear"
-                                        >
-                                            <Shield className="w-4 h-4" />
-                                        </button>
-                                    )}
                                 </div>
                             </td>
                         </tr>
@@ -271,17 +247,22 @@ export const SessionsTable: React.FC<SessionsTableProps> = ({
                 Nenhuma sessão registrada no período.
             </div>
         ) : (
-            <div className="p-3 border-t border-border bg-muted flex justify-center">
+            <div className="flex justify-center border-t border-border bg-muted p-3">
                 {hasMore ? (
                     <button 
                         onClick={onLoadMore}
-                        className="text-[10px] font-bold text-muted-foreground hover:text-foreground uppercase tracking-wide transition-colors flex items-center gap-2 py-1 px-3 rounded hover:bg-background"
+                        disabled={isLoadingMore}
+                        className="inline-flex h-9 items-center gap-2 rounded-md px-3 text-xs font-medium text-muted-foreground transition-colors hover:bg-background hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
                     >
-                        <Loader2 className="w-3 h-3" />
-                        Carregar Mais
+                        {isLoadingMore ? (
+                            <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                        ) : (
+                            <ChevronDown className="h-3.5 w-3.5" />
+                        )}
+                        {isLoadingMore ? 'Carregando' : 'Carregar Mais'}
                     </button>
                 ) : (
-                    <span className="text-[10px] font-medium text-muted-foreground py-1">Fim da lista</span>
+                    <span className="py-1 text-[10px] font-medium text-muted-foreground">Fim da lista</span>
                 )}
             </div>
         )}
@@ -318,4 +299,3 @@ export const SessionsTable: React.FC<SessionsTableProps> = ({
     </div>
   );
 };
-

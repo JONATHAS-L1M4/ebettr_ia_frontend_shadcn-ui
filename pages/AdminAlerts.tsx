@@ -4,12 +4,15 @@ import { alertService } from '../services/alertService';
 import { useNotification } from '../context/NotificationContext';
 import { Plus, Trash2, Edit2, Loader2, AlertTriangle, Info, AlertCircle, ShieldAlert, Bell } from 'lucide-react';
 import DarkPage from '../components/layout/DarkPage';
+import { ConfirmationModal } from '../components/shared/ConfirmationModal';
+import { selectBaseClass } from '../components/inputs/styles';
 
 export const AdminAlerts: React.FC = () => {
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingAlert, setEditingAlert] = useState<Alert | null>(null);
+  const [alertToDelete, setAlertToDelete] = useState<string | null>(null);
   const { addNotification } = useNotification();
 
   const [formData, setFormData] = useState<AlertCreatePayload>({
@@ -81,7 +84,6 @@ export const AdminAlerts: React.FC = () => {
   };
 
   const handleDelete = async (id: string) => {
-    if (!window.confirm('Tem certeza que deseja excluir este alerta?')) return;
     try {
       await alertService.delete(id);
       addNotification('success', 'Alerta excluído', 'O alerta foi excluído com sucesso.');
@@ -117,7 +119,7 @@ export const AdminAlerts: React.FC = () => {
         </div>
         <button
           onClick={() => handleOpenModal()}
-          className="flex items-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground px-4 h-9 rounded-md text-xs font-bold uppercase tracking-wide transition-all border border-transparent whitespace-nowrap shadow-sm"
+          className="flex h-10 items-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground px-4 rounded-md text-xs font-bold uppercase tracking-wide transition-all border border-transparent whitespace-nowrap shadow-sm"
         >
           <Plus className="w-4 h-4" />
           Novo Alerta
@@ -173,7 +175,7 @@ export const AdminAlerts: React.FC = () => {
                           <Edit2 className="w-4 h-4" />
                         </button>
                         <button
-                          onClick={() => handleDelete(alert.id)}
+                          onClick={() => setAlertToDelete(alert.id)}
                           className="p-1.5 text-muted-foreground hover:text-red-400 hover:bg-red-950/40 rounded-md transition-colors"
                           title="Excluir"
                         >
@@ -206,7 +208,7 @@ export const AdminAlerts: React.FC = () => {
                   required
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  className="w-full border border-input rounded-lg px-3 py-2 text-sm bg-background text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                  className="w-full px-3 py-2 bg-background border border-input rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background text-sm placeholder:text-muted-foreground shadow-sm text-foreground"
                   placeholder="Ex: Manutenção Programada"
                 />
               </div>
@@ -229,7 +231,7 @@ export const AdminAlerts: React.FC = () => {
                   <select
                     value={formData.level}
                     onChange={(e) => setFormData({ ...formData, level: e.target.value as any })}
-                    className="w-full border border-input rounded-lg px-3 py-2 text-sm bg-background text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                    className={selectBaseClass}
                   >
                     <option value="info">Info</option>
                     <option value="warning">Warning</option>
@@ -269,8 +271,22 @@ export const AdminAlerts: React.FC = () => {
           </div>
         </div>
       )}
+
+      <ConfirmationModal
+        isOpen={alertToDelete !== null}
+        title="Excluir Alerta?"
+        message="Tem certeza que deseja excluir este alerta? Esta ação é irreversível."
+        onClose={() => setAlertToDelete(null)}
+        onConfirm={() => {
+          if (alertToDelete) {
+            handleDelete(alertToDelete);
+          }
+          setAlertToDelete(null);
+        }}
+        confirmLabel="Excluir"
+        isDestructive
+      />
     </div>
     </DarkPage>
   );
 };
-

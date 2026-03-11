@@ -151,8 +151,8 @@ export const AdminExecutionMetrics: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-muted rounded-xl flex items-center justify-center shadow-sm">
-              <BarChart3 className="w-5 h-5 text-white" />
+            <div className="w-10 h-10 border border-border rounded-lg flex items-center justify-center text-foreground bg-muted shadow-sm">
+              <BarChart3 className="w-5 h-5" />
             </div>
             <div>
               <h1 className="text-2xl font-bold text-foreground tracking-tight">Métricas de Execução</h1>
@@ -166,7 +166,7 @@ export const AdminExecutionMetrics: React.FC = () => {
             onClick={handleRefresh}
             disabled={isSyncing}
             className={`
-              flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wide transition-all shadow-sm border
+              flex h-10 items-center justify-center gap-2 px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wide transition-all shadow-sm border
               ${isSyncing 
                 ? 'bg-muted text-muted-foreground border-border cursor-not-allowed' 
                 : 'bg-card text-muted-foreground border-border hover:border-border hover:text-foreground hover:bg-muted'}
@@ -192,7 +192,7 @@ export const AdminExecutionMetrics: React.FC = () => {
               placeholder="Buscar por Agente ou Workflow ID..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-4 pr-4 py-2 bg-background border border-input rounded-lg text-sm text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-shadow"
+              className="w-full px-3 py-2 bg-background border border-input rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background text-sm placeholder:text-muted-foreground shadow-sm text-foreground pr-4"
             />
           </div>
           <div className="text-sm text-muted-foreground font-medium">
@@ -305,4 +305,3 @@ export const AdminExecutionMetrics: React.FC = () => {
     </DarkPage>
   );
 };
-

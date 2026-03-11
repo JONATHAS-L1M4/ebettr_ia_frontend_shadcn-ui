@@ -52,7 +52,7 @@ const AgentDetailWrapper = ({ agents, currentUser, isLoading, onBack, onUpdateAg
     if (isLoading) {
         return (
             <div className="flex flex-col items-center justify-center h-[60vh]">
-                <Loader2 className="w-8 h-8 animate-spin text-gray-300" />
+                <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
             </div>
         );
     }
@@ -63,16 +63,16 @@ const AgentDetailWrapper = ({ agents, currentUser, isLoading, onBack, onUpdateAg
     if (agent.isBlocked && currentUser.role?.toLowerCase().trim() !== 'admin') {
         return (
             <div className="flex flex-col items-center justify-center h-[60vh] text-center animate-fade-in">
-                <div className="w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center mb-4">
+                <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-destructive/12 text-destructive">
                     <Ban className="w-8 h-8" />
                 </div>
-                <h2 className="text-xl font-bold text-gray-900">Acesso Restrito</h2>
-                <p className="text-gray-500 mt-2 max-w-md">
+                <h2 className="text-xl font-bold text-foreground">Acesso Restrito</h2>
+                <p className="mt-2 max-w-md text-muted-foreground">
                     O acesso a este agente foi suspenso administrativamente. Por favor, entre em contato com o suporte para mais informações.
                 </p>
                 <button 
                 onClick={onBack}
-                className="mt-6 flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-black transition-colors"
+                className="mt-6 flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
                 >
                 <ArrowLeft className="w-4 h-4" /> Voltar para lista
                 </button>

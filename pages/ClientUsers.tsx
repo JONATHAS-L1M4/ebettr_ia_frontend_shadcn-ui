@@ -237,7 +237,7 @@ export const ClientUsers: React.FC = () => {
                     </div>
                     <input 
                         type="text" 
-                        className="bg-background border border-input text-foreground text-sm rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background block w-full pl-10 h-9 placeholder:text-muted-foreground shadow-sm" 
+                        className="w-full px-3 py-2 bg-background border border-input rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background text-sm placeholder:text-muted-foreground shadow-sm text-foreground pl-10 h-9" 
                         placeholder="Buscar usuário..." 
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
@@ -250,7 +250,7 @@ export const ClientUsers: React.FC = () => {
                 </div>
                 <input 
                     type="text" 
-                    className="bg-background border border-input text-foreground text-sm rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background block w-full pl-10 h-9 placeholder:text-muted-foreground shadow-sm" 
+                    className="w-full px-3 py-2 bg-background border border-input rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background text-sm placeholder:text-muted-foreground shadow-sm text-foreground pl-10 h-9" 
                     placeholder="Buscar usuário..." 
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
@@ -360,7 +360,7 @@ export const ClientUsers: React.FC = () => {
                                 </div>
                             )}
                         </div>
-                        <button type="submit" disabled={!newEmail || !newName || !newCompany || isSubmitting} className="w-full py-2 bg-primary text-primary-foreground text-xs font-bold rounded-md hover:bg-primary transition-colors uppercase tracking-wide disabled:opacity-50 disabled:cursor-not-allowed mt-2 flex items-center justify-center gap-2">
+                        <button type="submit" disabled={!newEmail || !newName || !newCompany || isSubmitting} className="mt-2 flex h-10 w-full items-center justify-center gap-2 rounded-md bg-primary py-2 text-xs font-bold uppercase tracking-wide text-primary-foreground transition-colors hover:bg-primary disabled:opacity-50 disabled:cursor-not-allowed">
                             {isSubmitting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : null}
                             {isSubmitting ? 'Salvando...' : 'Salvar Cadastro'}
                         </button>
@@ -389,4 +389,3 @@ export const ClientUsers: React.FC = () => {
     </DarkPage>
   );
 };
-

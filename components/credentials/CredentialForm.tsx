@@ -241,7 +241,7 @@ export const CredentialForm: React.FC<CredentialFormProps> = ({
   };
 
   const renderTestButton = () => {
-      const baseClass = "h-9 px-4 rounded-md text-[11px] font-bold uppercase tracking-wider transition-all duration-200 flex items-center gap-2 shadow-sm active:scale-95";
+      const baseClass = "h-10 px-4 rounded-md text-[11px] font-bold uppercase tracking-wider transition-all duration-200 flex items-center gap-2 shadow-sm active:scale-95";
       
       if (testStatus === 'testing') {
           return (
@@ -337,8 +337,8 @@ export const CredentialForm: React.FC<CredentialFormProps> = ({
         <div className="flex flex-col sm:flex-row justify-between items-center px-6 py-4 border-t border-border bg-muted shrink-0 gap-4">
           <div className="w-full sm:w-auto">{renderTestButton()}</div>
           <div className="flex gap-3 w-full sm:w-auto">
-            <button type="button" onClick={onCancel} className="flex-1 sm:flex-none px-4 py-2 text-xs text-muted-foreground hover:text-foreground hover:bg-background rounded-md font-bold uppercase tracking-wider transition-colors">Cancelar</button>
-            <button type="submit" form="credential-form" className="flex-1 sm:flex-none px-6 py-2 bg-primary text-primary-foreground text-xs font-bold rounded-md hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 uppercase tracking-wider"><Save className="w-3.5 h-3.5" /> Salvar</button>
+            <button type="button" onClick={onCancel} className="flex h-10 flex-1 items-center justify-center rounded-md px-4 py-2 text-xs text-muted-foreground hover:text-foreground hover:bg-background font-bold uppercase tracking-wider transition-colors sm:flex-none">Cancelar</button>
+            <button type="submit" form="credential-form" className="flex h-10 flex-1 items-center justify-center gap-2 px-6 py-2 bg-primary text-primary-foreground text-xs font-bold rounded-md hover:bg-primary/90 transition-colors uppercase tracking-wider sm:flex-none"><Save className="w-3.5 h-3.5" /> Salvar</button>
           </div>
         </div>
       </div>
@@ -363,4 +363,3 @@ export const CredentialForm: React.FC<CredentialFormProps> = ({
     </>
   );
 };
-

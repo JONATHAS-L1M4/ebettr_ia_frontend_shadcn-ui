@@ -8,7 +8,6 @@ import {
   Building2,
   Headset,
   Lock,
-  LogOut,
   MoreHorizontal,
   Server,
   Shield,
@@ -320,7 +319,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                       tooltip={displayName}
                     >
-                      <div className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-white text-xs font-bold text-black">
+                      <div className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-sidebar-accent text-xs font-bold text-sidebar-accent-foreground">
                         {currentUser?.avatarUrl ? (
                           <img src={currentUser.avatarUrl} alt={displayName} className="h-full w-full object-cover" />
                         ) : (
@@ -343,7 +342,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   >
                     <DropdownMenuLabel className="p-0 font-normal">
                       <div className="flex items-center gap-2 px-2 py-2 text-left text-sm">
-                        <div className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-lg bg-white text-xs font-bold text-black">
+                        <div className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-lg bg-sidebar-accent text-xs font-bold text-sidebar-accent-foreground">
                           {currentUser?.avatarUrl ? (
                             <img src={currentUser.avatarUrl} alt={displayName} className="h-full w-full object-cover" />
                           ) : (
@@ -370,26 +369,23 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </SidebarRoot>
 
       {showLogoutConfirm && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/30 p-4 backdrop-blur-sm animate-fade-in">
-          <div className="w-full max-w-sm rounded-xl border border-gray-200 bg-white p-6 shadow-2xl animate-scale-in">
+        <div className="fixed inset-0 z-[100] flex animate-fade-in items-center justify-center bg-background/70 p-4 backdrop-blur-sm">
+          <div className="w-full max-w-sm animate-scale-in rounded-xl border border-border bg-card p-6 text-card-foreground shadow-2xl">
             <div className="flex flex-col items-center gap-4 text-center">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full border border-red-100 bg-red-50 text-red-500">
-                <LogOut className="h-6 w-6" />
-              </div>
               <div>
-                <h3 className="text-lg font-bold text-gray-900">Encerrar Sessao?</h3>
-                <p className="mt-2 text-sm text-gray-500">Voce tem certeza que deseja sair da plataforma?</p>
+                <h3 className="text-lg font-bold text-card-foreground">Encerrar Sessao?</h3>
+                <p className="mt-2 text-sm text-muted-foreground">Voce tem certeza que deseja sair da plataforma?</p>
               </div>
               <div className="flex w-full gap-3 pt-2">
                 <button
                   onClick={() => setShowLogoutConfirm(false)}
-                  className="flex-1 rounded-lg border border-gray-200 py-2.5 text-sm font-bold text-gray-600 transition-colors hover:border-gray-300 hover:bg-gray-50 hover:text-black"
+                  className="flex h-10 flex-1 items-center justify-center rounded-lg border border-border py-2 text-sm font-bold text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
                 >
                   Cancelar
                 </button>
                 <button
                   onClick={handleConfirmLogout}
-                  className="flex-1 rounded-lg bg-red-600 py-2.5 text-sm font-bold text-white shadow-sm transition-colors hover:bg-red-700"
+                  className="flex h-10 flex-1 items-center justify-center rounded-lg bg-red-600 py-2 text-sm font-bold text-white shadow-sm transition-colors hover:bg-red-700"
                 >
                   Sair
                 </button>

@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { ConfigField, SelectOption } from '../../types';
-import { inputBaseClass } from './styles';
+import { selectBaseClass } from './styles';
 
 interface SelectFieldProps {
   field: ConfigField;
@@ -40,7 +40,7 @@ export const SelectField: React.FC<SelectFieldProps> = ({ field, onChange }) => 
       <select 
         value={currentValString}
         onChange={handleSelectChange}
-        className={`${inputBaseClass} appearance-none cursor-pointer`}
+        className={selectBaseClass}
       >
         <option value="" disabled>Selecione...</option>
         {options.map((opt) => (

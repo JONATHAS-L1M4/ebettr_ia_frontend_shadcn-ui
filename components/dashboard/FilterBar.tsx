@@ -1,7 +1,8 @@
 
 import React from 'react';
-import { Search, Filter, RefreshCw, Download, Calendar, ChevronDown } from '../ui/Icons';
+import { Search, Funnel, RefreshCw, Download, Calendar, ChevronDown } from '../ui/Icons';
 import { DashboardFiltersState } from './types';
+import { selectBaseClass } from '../inputs/styles';
 
 interface FilterBarProps {
   filters: DashboardFiltersState;
@@ -40,9 +41,9 @@ const MODE_LABELS: Record<string, string> = {
     error: 'Erro',
     integrated: 'Integrado',
     // Sessões (Risco)
-    high_risk: 'Risco Crítico (>80)',
-    medium_risk: 'Risco Médio (50-79)',
-    low_risk: 'Risco Baixo (<50)'
+    high_risk: 'Crítico',
+    medium_risk: 'Médio',
+    low_risk: 'Baixo'
 };
 
 export const FilterBar: React.FC<FilterBarProps> = ({ 
@@ -62,7 +63,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
     onFilterChange({ ...filters, [key]: value });
   };
 
-  const selectClass = "bg-background border border-input text-foreground text-sm rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background block p-2 transition-colors cursor-pointer w-full";
+  const selectClass = selectBaseClass;
 
   return (
     <div className="bg-card p-4 rounded-lg border border-border shadow-sm flex flex-col xl:flex-row items-stretch xl:items-center justify-between gap-4">
@@ -77,7 +78,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
           </div>
           <input 
             type="text" 
-            className="bg-background border border-input text-foreground text-sm rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background block w-full pl-10 p-2 placeholder:text-muted-foreground" 
+            className="w-full px-3 py-2 bg-background border border-input rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background text-sm placeholder:text-muted-foreground shadow-sm text-foreground pl-10" 
             placeholder="Buscar por ID..." 
             value={filters.search}
             onChange={(e) => handleChange('search', e.target.value)}
@@ -89,12 +90,12 @@ export const FilterBar: React.FC<FilterBarProps> = ({
             {/* Status Filter */}
             <div className="relative w-full">
                 <div className="absolute left-2.5 top-2.5 pointer-events-none">
-                    <Filter className="w-3.5 h-3.5 text-muted-foreground" />
+                    <Funnel className="w-3.5 h-3.5 text-muted-foreground mt-0.5" />
                 </div>
                 <select 
                     value={filters.status}
                     onChange={(e) => handleChange('status', e.target.value)}
-                    className={`${selectClass} pl-8 appearance-none`}
+                    className={`${selectClass} pl-8`}
                 >
                     <option value="all">Todos Status</option>
                     {availableStatuses.map(status => (
@@ -132,7 +133,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
                 <select
                     value={limit}
                     onChange={(e) => onLimitChange(Number(e.target.value))}
-                    className="bg-muted text-muted-foreground text-xs font-bold py-1.5 pl-3 pr-8 rounded-md border-transparent hover:bg-muted cursor-pointer appearance-none outline-none focus:ring-0 transition-all h-[34px]"
+                    className={selectClass}
                     title="Itens por página"
                 >
                     <option value={15}>15 / pág</option>

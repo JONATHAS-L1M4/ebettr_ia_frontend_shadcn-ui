@@ -1,6 +1,6 @@
 import React from 'react';
 import { ExecutionLog, SortConfig } from './types';
-import { XCircle, AlertOctagon, Eye, Loader2, Clock, ChevronUp, ChevronDown } from '../ui/Icons';
+import { XCircle, AlertOctagon, Eye, Loader2, Clock, ChevronUp, ChevronDown, Check } from '../ui/Icons';
 import { formatDate, getDuration } from './utils';
 
 interface LogsTableProps {
@@ -139,11 +139,8 @@ export const LogsTable: React.FC<LogsTableProps> = ({
                 <tr key={log.id} className="hover:bg-accent/40 transition-colors group">
                   <td className="px-5 py-3 whitespace-nowrap">
                     {log.status === 'success' && (
-                      <div className="flex items-center gap-2.5">
-                        <div className="relative flex items-center justify-center">
-                          <div className="w-2 h-2 rounded-full bg-foreground" />
-                          <div className="absolute w-2 h-2 rounded-full bg-foreground animate-ping opacity-20" />
-                        </div>
+                      <div className="flex items-center gap-2">
+                        <Check className="w-4 h-4 text-foreground" />
                         <span className="text-xs font-semibold text-foreground">Sucesso</span>
                       </div>
                     )}

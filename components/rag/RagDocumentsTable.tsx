@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { RagDocument } from '../../types';
 import { FileText, Trash2, Eye, Search, X, Loader2 } from '../ui/Icons';
+import { selectBaseClass } from '../inputs/styles';
 
 interface RagDocumentsTableProps {
   documents: RagDocument[];
@@ -136,7 +137,7 @@ export const RagDocumentsTable: React.FC<RagDocumentsTableProps> = ({
                 <button
                     onClick={onBulkDelete}
                     disabled={isDeletingBulk}
-                    className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wide transition-all shadow-sm border bg-red-950/40 text-red-300 border-red-900/50 hover:bg-red-700 hover:text-red-50 hover:border-red-600 disabled:opacity-50 w-full sm:w-auto"
+                    className="flex h-10 w-full items-center justify-center gap-2 px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wide transition-all shadow-sm border bg-red-950/40 text-red-300 border-red-900/50 hover:bg-red-700 hover:text-red-50 hover:border-red-600 disabled:opacity-50 sm:w-auto"
                 >
                     {isDeletingBulk ? <Loader2 className="w-3 h-3 animate-spin" /> : <Trash2 className="w-3 h-3" />}
                     Excluir ({selectedIds.length})
@@ -171,7 +172,7 @@ export const RagDocumentsTable: React.FC<RagDocumentsTableProps> = ({
                     setItemsPerPage(Number(e.target.value));
                     setCurrentPage(1);
                   }}
-                  className="px-3 py-2.5 text-xs font-bold text-muted-foreground uppercase tracking-wide rounded-lg bg-card shadow-sm border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background cursor-pointer"
+                  className={selectBaseClass}
                 >
                   <option value={5}>5 / pág</option>
                   <option value={10}>10 / pág</option>
@@ -184,14 +185,14 @@ export const RagDocumentsTable: React.FC<RagDocumentsTableProps> = ({
                     <button 
                         onClick={() => goToPage(currentPage - 1)}
                         disabled={currentPage === 1}
-                        className="px-4 py-2.5 text-xs font-bold text-muted-foreground hover:text-foreground uppercase tracking-wide transition-all disabled:opacity-30 disabled:cursor-not-allowed rounded-lg bg-card shadow-sm border border-border"
+                        className="h-10 px-4 py-2 text-xs font-bold text-muted-foreground hover:text-foreground uppercase tracking-wide transition-all disabled:opacity-30 disabled:cursor-not-allowed rounded-lg bg-card shadow-sm border border-border"
                     >
                         Voltar
                     </button>
                     <button 
                         onClick={() => goToPage(currentPage + 1)}
                         disabled={currentPage === totalPages || totalPages === 0}
-                        className="px-4 py-2.5 text-xs font-bold text-muted-foreground hover:text-foreground uppercase tracking-wide transition-all disabled:opacity-30 disabled:cursor-not-allowed rounded-lg bg-card shadow-sm border border-border"
+                        className="h-10 px-4 py-2 text-xs font-bold text-muted-foreground hover:text-foreground uppercase tracking-wide transition-all disabled:opacity-30 disabled:cursor-not-allowed rounded-lg bg-card shadow-sm border border-border"
                     >
                         Próximo
                     </button>
@@ -281,4 +282,3 @@ export const RagDocumentsTable: React.FC<RagDocumentsTableProps> = ({
     </div>
   );
 };
-
