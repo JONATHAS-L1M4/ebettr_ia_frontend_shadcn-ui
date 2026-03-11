@@ -127,7 +127,7 @@ const ParameterRow: React.FC<ParameterRowProps> = ({ label, value, path, onSelec
                 
                 <div className="flex items-center gap-2 shrink-0">
                     {displayValue && (
-                        <span className={`font-mono text-[10px] truncate max-w-[120px] ${isUsed ? 'text-muted-foreground/70' : 'text-muted-foreground'} ${typeof value === 'boolean' ? (value ? 'text-foreground' : 'text-muted-foreground') : ''}`}>
+                        <span className={`font-mono text-[10px] truncate max-w-[120px] ${isUsed ? 'text-muted-foreground/70' : 'text-muted-foreground'} ${typeof value === 'boolean' ? (value ? 'text-foreground' : 'text-rose-700') : ''}`}>
                             {displayValue}
                         </span>
                     )}
@@ -285,7 +285,7 @@ export const JsonMapper: React.FC<JsonMapperProps> = ({
                                 {/* Card Body: Parameters */}
                                 <div className="p-3">
                                     {/* Root Properties (like disabled) */}
-                                    <div className="mb-2 pb-2 border-b border-border/60">
+                                    <div className="mb-2 pb-2">
                                         <ParameterRow 
                                             label="disabled"
                                             value={node.disabled}

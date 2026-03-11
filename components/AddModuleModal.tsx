@@ -235,6 +235,7 @@ export const ModuleEditor: React.FC<ModuleEditorProps> = ({ onClose, onSave, ini
                 onRemove={handleRemoveField}
                 onReorder={handleReorderField}
                 onPreviewChange={handlePreviewChange}
+                onAddField={() => setEditingFieldId(null)}
                 onImport={(importedFields) => {
                     const existingIds = new Set(fields.map(f => f.id));
                     const idMap = new Map<string, string>();

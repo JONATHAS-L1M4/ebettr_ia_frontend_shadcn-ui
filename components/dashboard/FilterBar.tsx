@@ -1,10 +1,13 @@
 
 import React from 'react';
-import { Search, Funnel, RefreshCw, Download, Calendar, ChevronDown } from '../ui/Icons';
+import { Search, Funnel, Download, ChevronDown } from '../ui/Icons';
 import { DashboardFiltersState } from './types';
 
 const selectBaseClass =
   'w-full px-3 py-2 bg-background border border-input rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background placeholder:text-muted-foreground shadow-sm text-foreground disabled:cursor-not-allowed disabled:opacity-50 appearance-none cursor-pointer';
+
+const searchInputClass =
+  'block w-full rounded-lg border border-input bg-background py-2.5 pl-10 pr-3 text-xs text-foreground placeholder:text-muted-foreground shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background';
 
 interface FilterBarProps {
   filters: DashboardFiltersState;
@@ -17,6 +20,7 @@ interface FilterBarProps {
   limit?: number;
   onLimitChange?: (limit: number) => void;
   hideDateRange?: boolean;
+  searchPlaceholder?: string;
 }
 
 // Mapas de tradução para exibição amigável
@@ -58,7 +62,8 @@ export const FilterBar: React.FC<FilterBarProps> = ({
     availableModes = [],
     limit,
     onLimitChange,
-    hideDateRange = false
+    hideDateRange = false,
+    searchPlaceholder = 'Buscar por ID...'
 }) => {
   
   const handleChange = (key: keyof DashboardFiltersState, value: any) => {
@@ -74,14 +79,14 @@ export const FilterBar: React.FC<FilterBarProps> = ({
       <div className="flex flex-col md:flex-row gap-2 flex-1">
         
         {/* Search - Largura ajustada para não empurrar os filtros */}
-        <div className="relative group w-full md:w-60 shrink-0">
+        <div className="relative group w-full md:w-72 shrink-0">
           <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-muted-foreground group-focus-within:text-foreground">
             <Search className="w-4 h-4" />
           </div>
           <input 
             type="text" 
-            className="w-full px-3 py-2 bg-background border border-input rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background text-sm placeholder:text-muted-foreground shadow-sm text-foreground pl-10" 
-            placeholder="Buscar por ID..." 
+            className={searchInputClass}
+            placeholder={searchPlaceholder}
             value={filters.search}
             onChange={(e) => handleChange('search', e.target.value)}
           />

@@ -50,7 +50,7 @@ export const DeleteWithCodeModal: React.FC<DeleteWithCodeModalProps> = ({
                     type="text" 
                     value={userInput}
                     onChange={(e) => setUserInput(e.target.value)}
-                    placeholder="Digite o cÃ³digo aqui"
+                    placeholder="Digite o codigo aqui"
                     className="w-full px-3 py-2 bg-background border border-input rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-destructive focus-visible:ring-offset-2 focus-visible:ring-offset-background text-sm placeholder:text-muted-foreground shadow-sm text-foreground text-center font-mono transition-all"
                     maxLength={6}
                 />

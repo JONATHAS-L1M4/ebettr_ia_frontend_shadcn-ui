@@ -170,7 +170,7 @@ export const ModuleSettings: React.FC<ModuleSettingsProps> = ({
           <label className={labelClass}>
             <LayoutGrid className="w-3 h-3" /> Largura Padrao
           </label>
-          <div className="flex h-[36px] w-full items-center gap-2 rounded-lg border border-border bg-muted/60 p-1 shadow-inner">
+          <div className="flex h-[36px] w-full items-center gap-2 rounded-lg bg-muted/60 p-1 shadow-inner">
             <button
               type="button"
               onClick={() => setWidth('33%')}

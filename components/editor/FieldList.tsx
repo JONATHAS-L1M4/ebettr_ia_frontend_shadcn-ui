@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { ConfigField, FieldType } from '../../types';
-import { Activity, Box, Trash2, CircleHelp, ChevronUp, ChevronDown, Lock, Download, Upload } from '../ui/Icons';
+import { Activity, Box, Trash2, CircleHelp, ChevronUp, ChevronDown, Lock, Download, Upload, Plus } from '../ui/Icons';
 import { TextField } from '../inputs/TextField';
 import { TextAreaField } from '../inputs/TextAreaField';
 import { NumberField } from '../inputs/NumberField';
@@ -22,11 +22,12 @@ interface FieldListProps {
   onReorder: (index: number, direction: 'up' | 'down') => void;
   onPreviewChange: (id: string, value: any) => void;
   onImport?: (fields: ConfigField[]) => void;
+  onAddField?: () => void;
   editingFieldId: string | null;
 }
 
 export const FieldList: React.FC<FieldListProps> = ({ 
-  fields, onEdit, onRemove, onReorder, onPreviewChange, onImport, editingFieldId
+  fields, onEdit, onRemove, onReorder, onPreviewChange, onImport, onAddField, editingFieldId
 }) => {
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
@@ -228,10 +229,19 @@ export const FieldList: React.FC<FieldListProps> = ({
                             </div>
                         </div>
                     )})}
+                    {onAddField && (
+                        <button
+                            onClick={onAddField}
+                            className="col-span-6 flex min-h-[96px] items-center justify-center gap-2 rounded-lg border border-dashed border-border bg-card/60 px-4 py-6 text-xs font-bold uppercase tracking-wide text-muted-foreground shadow-sm transition-colors hover:border-border hover:bg-muted hover:text-foreground"
+                            title="Adicionar Campo"
+                        >
+                            <Plus className="w-4 h-4" />
+                            Adicionar Campo
+                        </button>
+                    )}
                 </div>
             )}
         </div>
     </div>
   );
 };
-

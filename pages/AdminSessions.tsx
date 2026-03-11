@@ -410,7 +410,7 @@ export const AdminSessions: React.FC<AdminSessionsProps> = ({ onLogout }) => {
                         <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">Online Agora</h3>
                         <button 
                             onClick={() => loadData(true)}
-                        className="p-1 text-muted-foreground hover:text-emerald-300 hover:bg-emerald-950/40 rounded transition-all opacity-0 group-hover:opacity-100"
+                        className="p-1 text-muted-foreground hover:text-emerald-300 hover:bg-emerald-950/40 rounded transition-colors opacity-0 group-hover:opacity-100"
                             title="Atualizar"
                         >
                             <RefreshCw className={`w-3 h-3 ${loading ? 'animate-spin' : ''}`} />
@@ -431,7 +431,7 @@ export const AdminSessions: React.FC<AdminSessionsProps> = ({ onLogout }) => {
                         <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">Risco Elevado</h3>
                         <button 
                             onClick={() => loadData(true)}
-                        className="p-1 text-muted-foreground hover:text-red-400 hover:bg-red-950/40 rounded transition-all opacity-0 group-hover:opacity-100"
+                        className="p-1 text-muted-foreground hover:text-red-400 hover:bg-red-950/40 rounded transition-colors opacity-0 group-hover:opacity-100"
                             title="Atualizar"
                         >
                             <RefreshCw className={`w-3 h-3 ${loading ? 'animate-spin' : ''}`} />
@@ -450,7 +450,7 @@ export const AdminSessions: React.FC<AdminSessionsProps> = ({ onLogout }) => {
                         <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">Tempo Médio</h3>
                         <button 
                             onClick={() => loadData(true)}
-                        className="p-1 text-muted-foreground hover:text-foreground hover:bg-muted rounded transition-all opacity-0 group-hover:opacity-100"
+                        className="p-1 text-muted-foreground hover:text-foreground hover:bg-muted rounded transition-colors opacity-0 group-hover:opacity-100"
                         title="Atualizar"
                     >
                             <RefreshCw className={`w-3 h-3 ${loading ? 'animate-spin' : ''}`} />
@@ -475,6 +475,7 @@ export const AdminSessions: React.FC<AdminSessionsProps> = ({ onLogout }) => {
             availableModes={['high_risk', 'medium_risk', 'low_risk']}
             limit={limit}
             onLimitChange={setLimit}
+            searchPlaceholder="Buscar por email ou IP..."
         />
 
         <div className="w-full">
@@ -497,7 +498,7 @@ export const AdminSessions: React.FC<AdminSessionsProps> = ({ onLogout }) => {
                 <div className="flex w-full flex-col items-stretch gap-2 sm:w-auto sm:flex-row sm:items-center">
                     <button 
                         onClick={() => setSelectedSessionIds([])}
-                        className="flex h-10 flex-1 items-center justify-center gap-2 rounded-md border border-border bg-background px-4 py-2 text-xs font-bold text-muted-foreground transition-all hover:bg-muted hover:text-foreground sm:flex-none"
+                        className="flex h-10 flex-1 items-center justify-center gap-2 rounded-md border border-border bg-background px-4 py-2 text-xs font-bold text-muted-foreground transition-colors hover:bg-muted hover:text-foreground sm:flex-none"
                     >
                         <X className="w-4 h-4" /> Limpar Seleção
                     </button>
@@ -505,7 +506,7 @@ export const AdminSessions: React.FC<AdminSessionsProps> = ({ onLogout }) => {
                     <button 
                         onClick={handleRevokeAllFiltered}
                         disabled={isBulkProcessing}
-                        className="flex h-10 flex-1 items-center justify-center gap-2 rounded-md border border-border bg-background px-4 py-2 text-xs font-bold text-foreground transition-all hover:bg-muted sm:flex-none"
+                        className="flex h-10 flex-1 items-center justify-center gap-2 rounded-md border border-border bg-background px-4 py-2 text-xs font-bold text-foreground transition-colors hover:bg-muted sm:flex-none"
                         title="Derrubar todas as sessões que batem com o filtro atual usando API bulk"
                     >
                         <Zap className="w-4 h-4" /> Revogar Tudo (Filtro)
@@ -514,7 +515,7 @@ export const AdminSessions: React.FC<AdminSessionsProps> = ({ onLogout }) => {
                     <button 
                         onClick={handleBulkRevokeSelected}
                         disabled={isBulkProcessing}
-                        className="flex h-10 flex-1 items-center justify-center gap-2 rounded-md border border-border bg-muted/60 px-6 py-2 text-xs font-bold text-foreground transition-all hover:bg-muted sm:flex-none"
+                        className="flex h-10 flex-1 items-center justify-center gap-2 rounded-md border border-border bg-muted/60 px-6 py-2 text-xs font-bold text-foreground transition-colors hover:bg-muted sm:flex-none"
                     >
                         {isBulkProcessing ? <Loader2 className="w-4 h-4 animate-spin" /> : <LogOut className="w-4 h-4" />}
                         Derrubar Selecionadas

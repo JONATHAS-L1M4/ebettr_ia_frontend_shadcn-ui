@@ -1,322 +1,436 @@
-
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { UserSession } from '../../types';
-import { Globe, LogOut, MapPin, Loader2, Smartphone, Laptop, X, ChevronDown } from '../ui/Icons';
 import {
- Table,
- TableHeader,
- TableBody,
- TableRow,
- TableHead,
- TableCell,
+  ChevronDown,
+  Globe,
+  Laptop,
+  Loader2,
+  LockOpen,
+  LogOut,
+  MapPin,
+  Smartphone,
+  X,
+} from '../ui/Icons';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from '../ui/table';
 
 interface SessionsTableProps {
- sessions: UserSession[];
- onRevoke: (id: string) => void;
- revokingId?: string | null;
- onBlock: (email: string) => void;
- onUnblock: (email: string) => void;
- hasMore?: boolean;
- isLoadingMore?: boolean;
- onLoadMore?: () => void;
- // Multi-selection props
- selectedIds: string[];
- onSelectionChange: (ids: string[]) => void;
+  sessions: UserSession[];
+  onRevoke: (id: string) => void;
+  revokingId?: string | null;
+  onBlock: (email: string) => void;
+  onUnblock: (email: string) => void;
+  hasMore?: boolean;
+  isLoadingMore?: boolean;
+  onLoadMore?: () => void;
+  selectedIds: string[];
+  onSelectionChange: (ids: string[]) => void;
 }
 
-export const SessionsTable: React.FC<SessionsTableProps> = ({ 
- sessions, 
- onRevoke, 
- revokingId, 
- hasMore = false,
- isLoadingMore = false,
- onLoadMore,
- selectedIds,
- onSelectionChange
+const controlButtonClass =
+  'px-3 py-1.5 text-[10px] font-bold text-muted-foreground hover:text-foreground uppercase tracking-wide transition-colors disabled:opacity-30 disabled:cursor-not-allowed rounded-md bg-card shadow-sm border border-border hover:bg-accent';
+
+const iconButtonClass =
+  'inline-flex items-center justify-center rounded-md p-1.5 text-muted-foreground transition-colors disabled:cursor-not-allowed disabled:opacity-50';
+
+export const SessionsTable: React.FC<SessionsTableProps> = ({
+  sessions,
+  onRevoke,
+  revokingId,
+  onBlock: _onBlock,
+  onUnblock,
+  hasMore = false,
+  isLoadingMore = false,
+  onLoadMore,
+  selectedIds,
+  onSelectionChange,
 }) => {
- 
- const [mapLocation, setMapLocation] = useState<{lat: number, lng: number, label: string} | null>(null);
- const selectAllRef = useRef<HTMLInputElement | null>(null);
+  const [mapLocation, setMapLocation] = useState<{
+    lat: number;
+    lng: number;
+    label: string;
+  } | null>(null);
+  const selectAllRef = useRef<HTMLInputElement | null>(null);
 
- const isAllSelected = sessions.length > 0 && selectedIds.length === sessions.length;
- const isPartialSelected = selectedIds.length > 0 && selectedIds.length < sessions.length;
+  const visibleSessionIds = useMemo(() => sessions.map((session) => session.id), [sessions]);
+  const selectedVisibleCount = visibleSessionIds.filter((id) => selectedIds.includes(id)).length;
 
- useEffect(() => {
- if (selectAllRef.current) {
- selectAllRef.current.indeterminate = isPartialSelected;
- }
- }, [isPartialSelected]);
+  const isAllSelected =
+    sessions.length > 0 && visibleSessionIds.every((id) => selectedIds.includes(id));
+  const isPartialSelected = selectedVisibleCount > 0 && !isAllSelected;
 
- const handleSelectAll = () => {
- if (isAllSelected) {
- onSelectionChange([]);
- } else {
- onSelectionChange(sessions.map(s => s.id));
- }
- };
+  useEffect(() => {
+    if (selectAllRef.current) {
+      selectAllRef.current.indeterminate = isPartialSelected;
+    }
+  }, [isPartialSelected]);
 
- const handleSelectRow = (id: string) => {
- if (selectedIds.includes(id)) {
- onSelectionChange(selectedIds.filter(sid => sid !== id));
- } else {
- onSelectionChange([...selectedIds, id]);
- }
- };
+  const handleSelectAll = () => {
+    if (isAllSelected) {
+      onSelectionChange(selectedIds.filter((id) => !visibleSessionIds.includes(id)));
+      return;
+    }
 
- const getRiskBadge = (score: number) => {
- if (score >= 80) return <span className="text-[10px] font-bold text-red-400 bg-red-950/40 border border-red-900/50 px-2 py-0.5 rounded-full uppercase tracking-wide">Crítico ({score}%)</span>;
- if (score >= 50) return <span className="text-[10px] font-bold text-amber-300 bg-amber-950/40 border border-amber-900/50 px-2 py-0.5 rounded-full uppercase tracking-wide">Médio ({score}%)</span>;
- return <span className="text-[10px] font-bold text-emerald-300 bg-emerald-950/40 border border-emerald-900/50 px-2 py-0.5 rounded-full uppercase tracking-wide">Baixo ({score}%)</span>;
- };
+    onSelectionChange(Array.from(new Set([...selectedIds, ...visibleSessionIds])));
+  };
 
- const formatDate = (iso: string) => {
- return new Date(iso).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
- };
+  const handleSelectRow = (id: string) => {
+    if (selectedIds.includes(id)) {
+      onSelectionChange(selectedIds.filter((selectedId) => selectedId !== id));
+      return;
+    }
 
- const getDeviceIcon = (device: string) => {
- const d = device.toLowerCase();
- if (d.includes('mobile') || d.includes('android') || d.includes('iphone')) return <Smartphone className="w-3.5 h-3.5 text-muted-foreground" />;
- return <Laptop className="w-3.5 h-3.5 text-muted-foreground" />;
- };
+    onSelectionChange([...selectedIds, id]);
+  };
 
- const formatTimeAgo = (seconds: number) => {
- if (seconds < 60) return `${seconds}s atrás`;
- const minutes = Math.floor(seconds / 60);
- if (minutes < 60) return `${minutes}m atrás`;
- const hours = Math.floor(minutes / 60);
- return `${hours}h atrás`;
- };
+  const getRiskBadge = (score: number) => {
+    if (score >= 80) {
+      return (
+        <span className="rounded-full border border-red-900/50 bg-red-950/40 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-red-400">
+          Critico ({score}%)
+        </span>
+      );
+    }
 
- return (
- <div className="bg-panel border border-border rounded-lg shadow-sm overflow-hidden">
- <div className="p-5 border-b border-border flex items-center justify-between">
- <div>
- <h3 className="text-base font-bold text-foreground">Sessões Ativas & Histórico</h3>
- <p className="text-xs text-muted-foreground font-light hidden sm:block">Monitoramento de acesso em tempo real.</p>
- <p className="text-[10px] text-muted-foreground font-light sm:hidden mt-0.5">{sessions.length} visualizados</p>
- </div>
- <div className="flex items-center gap-2">
- {isLoadingMore && (
- <div className="flex items-center gap-2 text-[10px] font-bold text-muted-foreground uppercase tracking-widest mr-2">
- <Loader2 className="w-3 h-3 animate-spin" />
- </div>
- )}
- </div>
- </div>
- 
- <div className="overflow-x-auto">
- <Table className="w-full text-left border-collapse">
- <TableHeader>
- <TableRow className="bg-muted/40 border-b border-border text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
- <TableHead className="px-5 py-3 w-10">
- <input
- ref={selectAllRef}
- type="checkbox"
- className="rounded border-border bg-background text-foreground focus:ring-ring cursor-pointer"
- checked={isAllSelected}
- onChange={handleSelectAll}
- />
- </TableHead>
- <TableHead className="px-5 py-3">Status</TableHead>
- <TableHead className="px-5 py-3">Usuário / IP</TableHead>
- <TableHead className="px-5 py-3 hidden md:table-cell">Dispositivo</TableHead>
- <TableHead className="px-5 py-3 hidden md:table-cell">Localização</TableHead>
- <TableHead className="px-5 py-3 hidden sm:table-cell">Risco</TableHead>
- <TableHead className="px-5 py-3 hidden lg:table-cell">Cronologia</TableHead>
- <TableHead className="px-5 py-3 text-center">Ações</TableHead>
- </TableRow>
- </TableHeader>
- <TableBody className="divide-y divide-border text-sm">
- {sessions.map((session) => {
- const isSelected = selectedIds.includes(session.id);
- return (
- <TableRow
- key={session.id}
- className={`transition-colors group ${isSelected ? 'bg-accent/60 hover:bg-accent/70' : 'hover:bg-accent/40'}`}
- >
- {/* SELECTION */}
- <TableCell className="px-5 py-3">
- <input
- type="checkbox"
- className="rounded border-border bg-background text-foreground focus:ring-ring cursor-pointer"
- checked={isSelected}
- onChange={() => handleSelectRow(session.id)}
- />
- </TableCell>
+    if (score >= 50) {
+      return (
+        <span className="rounded-full border border-amber-900/50 bg-amber-950/40 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-amber-300">
+          Medio ({score}%)
+        </span>
+      );
+    }
 
- {/* STATUS */}
- <TableCell className="px-5 py-3 whitespace-nowrap">
- {session.status === 'active' && (
- <span className="text-xs font-semibold text-foreground">
- {session.isOnline ? 'Online Agora' : 'Ativa'}
- </span>
- )}
- {session.status === 'revoked' && (
- <span className="text-xs font-medium text-muted-foreground">Encerrada</span>
- )}
- {session.status === 'blocked' && (
- <span className="text-xs font-semibold text-zinc-300">Bloqueada</span>
- )}
- </TableCell>
+    return (
+      <span className="rounded-full border border-emerald-900/50 bg-emerald-950/40 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-emerald-300">
+        Baixo ({score}%)
+      </span>
+    );
+  };
 
- {/* USUÁRIO & IP */}
- <TableCell className="px-5 py-3 whitespace-nowrap">
- <div className="flex flex-col">
- <span className="text-xs font-semibold text-foreground">{session.email}</span>
- <span className="text-[10px] text-muted-foreground font-mono mt-0.5">{session.ip}</span>
- </div>
- </TableCell>
+  const getStatusLabel = (session: UserSession) => {
+    if (session.status === 'active') {
+      return session.isOnline ? 'Online agora' : 'Ativa';
+    }
 
- {/* DISPOSITIVO */}
- <TableCell className="px-5 py-3 whitespace-nowrap hidden md:table-cell">
- <div className="flex flex-col gap-1">
- <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
- {getDeviceIcon(session.device)}
- <span>{session.browser}</span>
- </div>
- </div>
- </TableCell>
+    if (session.status === 'blocked') {
+      return 'Bloqueada';
+    }
 
- {/* LOCALIZAÇÃO */}
- <TableCell className="px-5 py-3 whitespace-nowrap hidden md:table-cell">
- <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
- <Globe className="w-3 h-3 text-muted-foreground" /> 
- <span>{session.location}</span>
- {session.location_json?.latitude && session.location_json?.longitude && (
- <button 
- onClick={(e) => {
- e.stopPropagation();
- setMapLocation({
- lat: session.location_json!.latitude,
- lng: session.location_json!.longitude,
- label: session.location
- });
- }}
- className="ml-1 text-muted-foreground hover:text-foreground transition-colors"
- title="Ver no mapa"
- >
- <MapPin className="w-3 h-3" />
- </button>
- )}
- </div>
- </TableCell>
+    return 'Encerrada';
+  };
 
- {/* RISCO */}
- <TableCell className="px-5 py-3 whitespace-nowrap hidden sm:table-cell">
- {getRiskBadge(session.riskScore)}
- </TableCell>
+  const formatDate = (iso: string) =>
+    new Date(iso).toLocaleString('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
 
- {/* CRONOLOGIA (Datas) */}
- <TableCell className="px-5 py-3 whitespace-nowrap hidden lg:table-cell">
- <div className="flex flex-col gap-0.5">
- <span className="text-[10px] text-muted-foreground font-mono">
- <span className="font-bold text-muted-foreground mr-1.5">Início:</span>
- {formatDate(session.loginTime)}
- </span>
- <span className="text-[10px] text-muted-foreground font-mono">
- <span className="font-bold text-muted-foreground mr-1.5">
- {session.status === 'active' ? 'Último:' : 'Fim:'}
- </span>
- {formatDate(session.lastActive)}
- </span>
- {session.lastSeenSecondsAgo !== undefined && session.status === 'active' && (
- <span className="text-[10px] text-emerald-300 font-mono">
- <span className="font-bold text-emerald-400 mr-1.5">Visto:</span>
- {formatTimeAgo(session.lastSeenSecondsAgo)}
- </span>
- )}
- </div>
- </TableCell>
+  const getDeviceIcon = (device: string) => {
+    const normalizedDevice = device.toLowerCase();
 
- {/* AÇÕES */}
- <TableCell className="px-5 py-3 whitespace-nowrap text-center">
- <div className="flex items-center justify-center gap-1">
- {session.status === 'active' && (
- <button 
- type="button"
- onClick={(e) => {
- e.preventDefault();
- e.stopPropagation();
- onRevoke(session.id);
- }}
- disabled={revokingId === session.id}
- className="p-1.5 text-muted-foreground hover:text-destructive hover:bg-red-950/40 rounded-md transition-all inline-flex items-center justify-center group/btn disabled:opacity-50 disabled:cursor-not-allowed"
- title="Derrubar Sessão"
- >
- {revokingId === session.id ? (
- <Loader2 className="w-4 h-4 animate-spin" />
- ) : (
- <LogOut className="w-4 h-4" />
- )}
- </button>
- )}
- </div>
- </TableCell>
- </TableRow>
- )})}
- </TableBody>
- </Table>
- </div>
- 
- {/* Footer com Load More */}
- {sessions.length === 0 ? (
- <div className="p-8 text-center text-muted-foreground text-sm italic border-t border-border">
- Nenhuma Sessão registrada no período.
- </div>
- ) : (
- <div className="flex justify-center border-t border-border bg-muted/40 p-3">
- {hasMore ? (
- <button 
- onClick={onLoadMore}
- disabled={isLoadingMore}
- className="inline-flex h-9 items-center gap-2 rounded-md px-3 text-[10px] font-bold text-muted-foreground uppercase tracking-wide transition-colors hover:bg-accent hover:text-foreground disabled:cursor-not-allowed disabled:opacity-30 bg-card shadow-sm border border-border"
- >
- {isLoadingMore ? (
- <Loader2 className="h-3 w-3 animate-spin" />
- ) : (
- <ChevronDown className="h-3 w-3" />
- )}
- {isLoadingMore ? 'Carregando' : 'Carregar Mais'}
- </button>
- ) : (
- <span className="py-1 text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Fim da lista</span>
- )}
- </div>
- )}
+    if (
+      normalizedDevice.includes('mobile') ||
+      normalizedDevice.includes('android') ||
+      normalizedDevice.includes('iphone')
+    ) {
+      return <Smartphone className="h-3.5 w-3.5 text-muted-foreground" />;
+    }
 
- {/* Map Modal */}
- {mapLocation && (
- <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-fade-in">
- <div className="bg-panel border border-border rounded-xl shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col">
- <div className="px-4 py-3 border-border flex items-center justify-between bg-muted">
- <div className="flex items-center gap-2 text-foreground">
- <MapPin className="w-4 h-4 text-primary" />
- <h3 className="text-sm font-bold">Localização: {mapLocation.label}</h3>
- </div>
- <button 
- onClick={() => setMapLocation(null)}
- className="text-muted-foreground hover:text-foreground p-1 rounded-md hover:bg-background transition-colors"
- >
- <X className="w-5 h-5" />
- </button>
- </div>
- <div className="w-full h-[400px] bg-muted">
- <iframe 
- width="100%" 
- height="100%" 
- frameBorder="0" 
- style={{ border: 0 }}
- src={`https://maps.google.com/maps?q=${mapLocation.lat},${mapLocation.lng}&z=15&output=embed`}
- allowFullScreen
- ></iframe>
- </div>
- </div>
- </div>
- )}
- </div>
- );
+    return <Laptop className="h-3.5 w-3.5 text-muted-foreground" />;
+  };
+
+  const formatTimeAgo = (seconds: number) => {
+    if (seconds < 60) return `${seconds}s atras`;
+
+    const minutes = Math.floor(seconds / 60);
+    if (minutes < 60) return `${minutes}m atras`;
+
+    const hours = Math.floor(minutes / 60);
+    return `${hours}h atras`;
+  };
+
+  return (
+    <div className="overflow-hidden rounded-lg border border-border bg-panel shadow-sm">
+      <div className="flex flex-col gap-4 border-b border-border p-5">
+        <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
+          <div>
+            <h3 className="text-base font-bold text-foreground">Sessoes Ativas & Historico</h3>
+            <p className="hidden text-xs font-light text-muted-foreground sm:block">
+              Monitoramento consolidado de acessos em tempo real.
+            </p>
+            <p className="mt-0.5 text-[10px] font-light text-muted-foreground sm:hidden">
+              Acompanhe sessoes, risco e dispositivo.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2 sm:justify-end">
+            {selectedIds.length > 0 && (
+              <span className="rounded-md border border-border bg-card px-3 py-1.5 text-[10px] font-bold uppercase tracking-wide text-muted-foreground shadow-sm">
+                {selectedIds.length} selecionadas
+              </span>
+            )}
+            {isLoadingMore && (
+              <span className="inline-flex items-center gap-2 rounded-md border border-border bg-card px-3 py-1.5 text-[10px] font-bold uppercase tracking-wide text-muted-foreground shadow-sm">
+                <Loader2 className="h-3 w-3 animate-spin" />
+                Carregando
+              </span>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <div className="overflow-x-auto">
+        <Table className="w-full border-collapse text-left">
+          <TableHeader>
+            <TableRow className="border-b border-border bg-muted/40 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+              <TableHead className="w-10 px-5 py-3">
+                <input
+                  ref={selectAllRef}
+                  type="checkbox"
+                  className="h-4 w-4 cursor-pointer rounded border border-border bg-background"
+                  checked={isAllSelected}
+                  onChange={handleSelectAll}
+                />
+              </TableHead>
+              <TableHead className="px-5 py-3">Status</TableHead>
+              <TableHead className="px-5 py-3">Usuario / IP</TableHead>
+              <TableHead className="hidden px-5 py-3 md:table-cell">Dispositivo</TableHead>
+              <TableHead className="hidden px-5 py-3 md:table-cell">Localizacao</TableHead>
+              <TableHead className="hidden px-5 py-3 sm:table-cell">Risco</TableHead>
+              <TableHead className="hidden px-5 py-3 lg:table-cell">Cronologia</TableHead>
+              <TableHead className="px-5 py-3 text-center">Acoes</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody className="divide-y divide-border text-sm">
+            {sessions.length > 0 ? (
+              sessions.map((session) => {
+                const isSelected = selectedIds.includes(session.id);
+
+                return (
+                  <TableRow
+                    key={session.id}
+                    className={`group transition-colors ${
+                      isSelected ? 'bg-accent/20 hover:bg-accent/30' : 'hover:bg-accent/40'
+                    }`}
+                  >
+                    <TableCell className="whitespace-nowrap px-5 py-3">
+                      <input
+                        type="checkbox"
+                        className="h-4 w-4 cursor-pointer rounded border border-border bg-background"
+                        checked={isSelected}
+                        onChange={() => handleSelectRow(session.id)}
+                      />
+                    </TableCell>
+
+                    <TableCell className="whitespace-nowrap px-5 py-3 text-xs font-semibold text-foreground">
+                      {getStatusLabel(session)}
+                    </TableCell>
+
+                    <TableCell className="whitespace-nowrap px-5 py-3">
+                      <div className="flex flex-col">
+                        <span className="text-xs font-semibold text-foreground">
+                          {session.email}
+                        </span>
+                        <span className="mt-0.5 font-mono text-[10px] text-muted-foreground">
+                          {session.ip}
+                        </span>
+                      </div>
+                    </TableCell>
+
+                    <TableCell className="hidden whitespace-nowrap px-5 py-3 md:table-cell">
+                      <div className="flex flex-col gap-1">
+                        <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                          {getDeviceIcon(session.device)}
+                          <span>{session.browser}</span>
+                        </div>
+                      </div>
+                    </TableCell>
+
+                    <TableCell className="hidden whitespace-nowrap px-5 py-3 md:table-cell">
+                      <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
+                        <Globe className="h-3 w-3 text-muted-foreground" />
+                        <span>{session.location}</span>
+                        {session.location_json?.latitude && session.location_json?.longitude && (
+                          <button
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              setMapLocation({
+                                lat: session.location_json!.latitude,
+                                lng: session.location_json!.longitude,
+                                label: session.location,
+                              });
+                            }}
+                            className={`${iconButtonClass} -ml-1 p-1 hover:bg-accent hover:text-foreground`}
+                            title="Ver no mapa"
+                          >
+                            <MapPin className="h-3 w-3" />
+                          </button>
+                        )}
+                      </div>
+                    </TableCell>
+
+                    <TableCell className="hidden whitespace-nowrap px-5 py-3 sm:table-cell">
+                      {getRiskBadge(session.riskScore)}
+                    </TableCell>
+
+                    <TableCell className="hidden whitespace-nowrap px-5 py-3 lg:table-cell">
+                      <div className="flex flex-col gap-0.5">
+                        <span className="font-mono text-[10px] text-muted-foreground">
+                          <span className="mr-1.5 font-bold text-muted-foreground">Inicio:</span>
+                          {formatDate(session.loginTime)}
+                        </span>
+                        <span className="font-mono text-[10px] text-muted-foreground">
+                          <span className="mr-1.5 font-bold text-muted-foreground">
+                            {session.status === 'active' ? 'Ultimo:' : 'Fim:'}
+                          </span>
+                          {formatDate(session.lastActive)}
+                        </span>
+                        {session.lastSeenSecondsAgo !== undefined && session.status === 'active' && (
+                          <span className="font-mono text-[10px] text-emerald-300">
+                            <span className="mr-1.5 font-bold text-emerald-400">Visto:</span>
+                            {formatTimeAgo(session.lastSeenSecondsAgo)}
+                          </span>
+                        )}
+                      </div>
+                    </TableCell>
+
+                    <TableCell className="whitespace-nowrap px-5 py-3 text-center">
+                      <div className="flex items-center justify-center gap-1">
+                        {session.status === 'active' && (
+                          <button
+                            type="button"
+                            onClick={(event) => {
+                              event.preventDefault();
+                              event.stopPropagation();
+                              onRevoke(session.id);
+                            }}
+                            disabled={revokingId === session.id}
+                            className={`${iconButtonClass} hover:bg-red-950/40 hover:text-destructive`}
+                            title="Derrubar sessao"
+                          >
+                            {revokingId === session.id ? (
+                              <Loader2 className="h-4 w-4 animate-spin" />
+                            ) : (
+                              <LogOut className="h-4 w-4" />
+                            )}
+                          </button>
+                        )}
+
+                        {session.status === 'blocked' && (
+                          <button
+                            type="button"
+                            onClick={(event) => {
+                              event.preventDefault();
+                              event.stopPropagation();
+                              onUnblock(session.email);
+                            }}
+                            className={`${iconButtonClass} hover:bg-emerald-950/40 hover:text-emerald-300`}
+                            title="Desbloquear acesso"
+                          >
+                            <LockOpen className="h-4 w-4" />
+                          </button>
+                        )}
+
+                        {session.status === 'revoked' && (
+                          <span className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
+                            -
+                          </span>
+                        )}
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                );
+              })
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={8}
+                  className="px-5 py-12 text-center italic text-muted-foreground"
+                >
+                  Nenhuma sessao encontrada para os filtros atuais.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
+
+      <div className="border-t border-border bg-muted/20 px-5 py-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="text-xs font-light text-muted-foreground">
+              Mostrando {sessions.length}{' '}
+              {sessions.length === 1 ? 'sessao visivel' : 'sessoes visiveis'}
+            </p>
+            <p className="mt-0.5 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+              {selectedIds.length > 0
+                ? `${selectedIds.length} selecionadas`
+                : hasMore
+                  ? 'Mais historico disponivel'
+                  : 'Historico carregado'}
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center justify-end gap-2">
+            {hasMore ? (
+              <button
+                type="button"
+                onClick={() => onLoadMore?.()}
+                disabled={isLoadingMore}
+                className={controlButtonClass}
+              >
+                {isLoadingMore ? (
+                  <Loader2 className="h-3 w-3 animate-spin" />
+                ) : (
+                  <ChevronDown className="h-3 w-3" />
+                )}
+                {isLoadingMore ? 'Carregando' : 'Carregar mais'}
+              </button>
+            ) : (
+              <span className="rounded-md border border-border bg-card px-3 py-1.5 text-[10px] font-bold uppercase tracking-wide text-muted-foreground shadow-sm">
+                Fim da lista
+              </span>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {mapLocation && (
+        <div className="fixed inset-0 z-50 flex animate-fade-in items-center justify-center bg-black/50 p-4">
+          <div className="flex w-full max-w-2xl flex-col overflow-hidden rounded-xl border border-border bg-panel shadow-2xl">
+            <div className="flex items-center justify-between border-border bg-muted px-4 py-3">
+              <div className="flex items-center gap-2 text-foreground">
+                <MapPin className="h-4 w-4 text-primary" />
+                <h3 className="text-sm font-bold">Localizacao: {mapLocation.label}</h3>
+              </div>
+              <button
+                onClick={() => setMapLocation(null)}
+                className="rounded-md p-1 text-muted-foreground transition-colors hover:bg-background hover:text-foreground"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            <div className="h-[400px] w-full bg-muted">
+              <iframe
+                width="100%"
+                height="100%"
+                frameBorder="0"
+                style={{ border: 0 }}
+                src={`https://maps.google.com/maps?q=${mapLocation.lat},${mapLocation.lng}&z=15&output=embed`}
+                allowFullScreen
+              ></iframe>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 };
-
-
-
