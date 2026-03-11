@@ -9,7 +9,7 @@ const inputBaseClass =
 const controlBaseClass =
   'w-full px-3 py-2 bg-background border border-input rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background text-sm placeholder:text-muted-foreground shadow-sm text-foreground disabled:cursor-not-allowed disabled:opacity-50';
 const selectBaseClass =
-  'w-full px-3 py-2 bg-background border border-input rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background placeholder:text-muted-foreground shadow-sm text-foreground disabled:cursor-not-allowed disabled:opacity-50 appearance-none cursor-pointer';
+  'w-full px-3 py-2 bg-background border border-input rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background text-sm placeholder:text-muted-foreground shadow-sm text-foreground disabled:cursor-not-allowed disabled:opacity-50 appearance-none cursor-pointer';
 import { encryptPath } from '../../utils/encryption';
 
 // Imported Inputs for Default Value preview
@@ -509,8 +509,8 @@ export const FieldForm: React.FC<FieldFormProps> = ({
                 </div>
                 <div className="space-y-1">
                     <label className={labelClass}>Obrigatório</label>
-                    <div className={`h-[32px] px-3 bg-card border rounded-md flex items-center justify-between border-border ${isAnnotationType ? 'opacity-50 pointer-events-none' : ''}`}>
-                        <span className="text-xs text-muted-foreground">{required ? 'Sim' : 'Opcional'}</span>
+                    <div className={`px-3 py-2 border rounded-md flex items-center justify-between border-border bg-[#1f1f1f] ${isAnnotationType ? 'opacity-50 pointer-events-none' : ''}`}>
+                        <span className="text-sm text-muted-foreground">{required ? 'Sim' : 'Opcional'}</span>
                         <Toggle checked={required} onChange={setRequired} size="sm" />
                     </div>
                 </div>
