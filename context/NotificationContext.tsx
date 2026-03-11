@@ -138,7 +138,7 @@ const NotificationItem: React.FC<{
     error: {
       icon: AlertCircle,
       iconClassName: 'text-destructive',
-      alertClassName: 'border-destructive/40 bg-card text-foreground',
+      alertClassName: 'border-border bg-card text-foreground',
     },
     warning: {
       icon: AlertTriangle,
