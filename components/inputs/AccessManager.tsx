@@ -138,7 +138,7 @@ export const AccessManager: React.FC<AccessManagerProps> = ({
   const isDisabled = readonly;
 
   return (
-    <div className="space-y-4">
+    <div className="flex h-full min-h-0 flex-col gap-4">
       {!readonly && (
         <div className="grid grid-cols-1 gap-3 md:grid-cols-[minmax(0,1fr)_auto] md:items-end">
           <div className="w-full space-y-1.5" ref={dropdownRef}>
@@ -214,14 +214,14 @@ export const AccessManager: React.FC<AccessManagerProps> = ({
         <p className="ml-1 text-[10px] font-bold text-destructive">{error}</p>
       )}
 
-      <div className="overflow-hidden rounded-lg border border-border bg-panel/50 shadow-sm">
+      <div className="h-full min-h-0 w-full flex-1 overflow-hidden rounded-lg border border-border bg-panel/50 shadow-sm">
         {rules.length === 0 ? (
-          <div className="p-6 text-center text-muted-foreground">
+          <div className="flex h-full w-full flex-col items-center justify-center p-6 text-center text-muted-foreground">
             <User className="mx-auto mb-2 h-8 w-8 opacity-20" />
             <p className="text-xs">Nenhum usuario com acesso.</p>
           </div>
         ) : (
-          <div className="divide-y divide-border">
+          <div className="h-full divide-y divide-border">
             {rules.map((rule, idx) => (
               <div
                 key={idx}

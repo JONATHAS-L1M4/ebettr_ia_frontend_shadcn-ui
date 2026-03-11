@@ -24,6 +24,7 @@ import { SESSION_EXPIRED_EVENT } from './services/apiUtils';
 import { useNotification } from './context/NotificationContext';
 import { NotFound } from './pages/NotFound';
 import { darkTheme } from './design-tokens';
+import AppBackground from './components/layout/AppBackground';
 
 
 const USER_CACHE_KEY = 'ebettr_user_cache';
@@ -103,6 +104,12 @@ export default function App() {
   const navigate = useNavigate();
   const location = useLocation();
   const darkStyle = { ...(darkTheme as React.CSSProperties), colorScheme: 'dark' as const };
+  const renderWithBackground = (content: React.ReactNode) => (
+    <div className="relative min-h-screen bg-background text-foreground" style={darkStyle}>
+      <AppBackground />
+      <div className="relative z-10">{content}</div>
+    </div>
+  );
 
   // 1. Inicializa o currentUser lendo do LocalStorage para persistir no F5
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(() => {
@@ -233,8 +240,8 @@ export default function App() {
   );
 
   if (isAuthLoading) {
-      return (
-        <SidebarProvider className="h-screen bg-background overflow-hidden font-sans text-foreground" style={darkStyle}>
+      return renderWithBackground(
+        <SidebarProvider className="h-screen bg-transparent overflow-hidden font-sans text-foreground" style={darkStyle}>
           <Sidebar
             userRole={null}
             currentUser={null}
@@ -242,7 +249,7 @@ export default function App() {
             onLogout={handleLogout}
             isLoading={true}
           />
-          <SidebarInset className="flex-1 flex flex-col h-screen overflow-y-auto relative w-full bg-background text-foreground">
+          <SidebarInset className="flex-1 flex flex-col h-screen overflow-y-auto relative w-full bg-transparent text-foreground">
               <div className="flex h-full items-center justify-center">
                   <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
               </div>
@@ -261,13 +268,13 @@ export default function App() {
       if (currentUser) {
           return <Navigate to="/agents" replace />;
       }
-      return <Login onLogin={handleLogin} />;
+      return renderWithBackground(<Login onLogin={handleLogin} />);
   }
 
   const normalizedRole = currentUser?.role?.toLowerCase().trim();
 
-  return (
-    <SidebarProvider className="h-screen bg-background overflow-hidden font-sans text-foreground" style={darkStyle}>
+  return renderWithBackground(
+    <SidebarProvider className="h-screen bg-transparent overflow-hidden font-sans text-foreground" style={darkStyle}>
       <GoogleAnalytics />
       <Sidebar
         userRole={normalizedRole as any}
@@ -277,11 +284,11 @@ export default function App() {
         isLoading={isLoading}
       />
 
-      <SidebarInset className="flex-1 flex flex-col h-screen overflow-y-auto relative w-full bg-background text-foreground">
+      <SidebarInset className="flex-1 flex flex-col h-screen overflow-y-auto relative w-full bg-transparent text-foreground">
         <GlobalAlerts userRole={normalizedRole as any} />
         <Header />
 
-        <main className="flex-1 p-4 md:p-8 scroll-smooth bg-background text-foreground">
+        <main className="flex-1 p-4 md:p-8 scroll-smooth bg-transparent text-foreground">
             <Routes>
                 <Route path="/" element={<Navigate to="/agents" replace />} />
                 

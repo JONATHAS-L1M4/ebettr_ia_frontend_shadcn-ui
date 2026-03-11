@@ -53,7 +53,7 @@ export const ExpandedTextModal: React.FC<ExpandedTextModalProps> = ({
               value={localValue}
               onChange={(e) => setLocalValue(e.target.value)}
               maxLength={maxLength}
-              className="w-full flex-1 resize-none rounded-lg border border-border bg-background p-5 text-sm leading-relaxed text-foreground shadow-inner outline-none placeholder:text-muted-foreground focus:border-ring"
+              className="w-full flex-1 resize-none rounded-lg border border-border bg-background p-5 text-sm leading-relaxed text-foreground shadow-inner outline-none placeholder:text-muted-foreground"
               placeholder="Digite seu texto aqui..."
               autoFocus
            />

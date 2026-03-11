@@ -566,6 +566,32 @@ const AgentDetail: React.FC<AgentDetailProps> = ({
   const [pendingChanges, setPendingChanges] = useState<ConfigSection[]>([]);
   const [syncCooldown, setSyncCooldown] = useState(0);
 
+  const areFieldValuesEqual = (left: unknown, right: unknown) => {
+    if (Object.is(left, right)) return true;
+
+    if (
+      (Array.isArray(left) || Array.isArray(right)) ||
+      (typeof left === 'object' && left !== null) ||
+      (typeof right === 'object' && right !== null)
+    ) {
+      return JSON.stringify(left ?? null) === JSON.stringify(right ?? null);
+    }
+
+    return false;
+  };
+
+  const hasSectionChanges = (originalSection: ConfigSection | undefined, updatedSection: ConfigSection) => {
+    if (!originalSection) return true;
+    if (originalSection.fields.length !== updatedSection.fields.length) return true;
+
+    return updatedSection.fields.some((field) => {
+      const originalField = originalSection.fields.find((candidate) => candidate.id === field.id);
+      if (!originalField) return true;
+
+      return !areFieldValuesEqual(originalField.value, field.value);
+    });
+  };
+
   // --- PERSISTENT SYNC COOLDOWN ---
   const COOLDOWN_KEY = `sync_cooldown_${agent.id}`;
 
@@ -609,14 +635,16 @@ const AgentDetail: React.FC<AgentDetailProps> = ({
   };
 
   const handleConfigChange = (updatedSection: ConfigSection) => {
-    setPendingChanges(prev => {
-        const existing = prev.findIndex(s => s.id === updatedSection.id);
-        if (existing >= 0) {
-            const newPending = [...prev];
-            newPending[existing] = updatedSection;
-            return newPending;
-        }
-        return [...prev, updatedSection];
+    const originalSection = agent.configSections.find((section) => section.id === updatedSection.id);
+
+    setPendingChanges((prev) => {
+      const remainingChanges = prev.filter((section) => section.id !== updatedSection.id);
+
+      if (!hasSectionChanges(originalSection, updatedSection)) {
+        return remainingChanges;
+      }
+
+      return [...remainingChanges, updatedSection];
     });
   };
 

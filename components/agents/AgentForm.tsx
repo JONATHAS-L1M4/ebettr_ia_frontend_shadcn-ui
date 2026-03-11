@@ -726,12 +726,12 @@ export const AgentForm: React.FC<AgentFormProps> = ({
           </div>
 
           {(mode === 'create' || isAdmin) && (
-            <div className="flex flex-col gap-4">
+            <div className="flex h-full flex-col gap-4">
               <h3 className="text-xs font-bold text-foreground uppercase tracking-widest border-b border-border pb-2 flex items-center gap-2">
                 <Key className="w-3 h-3" /> Gestao de Acesso
               </h3>
 
-              <div className="flex flex-col gap-1 mt-2">
+              <div className="mt-2 flex h-full flex-1 flex-col gap-1">
                 <div className="flex items-center gap-2 mb-2">
                   <ShieldCheck className="w-4 h-4 text-muted-foreground" />
                   <span className="text-xs font-semibold text-foreground uppercase tracking-wide">Usuarios Permitidos</span>

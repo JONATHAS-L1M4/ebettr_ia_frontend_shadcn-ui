@@ -11,7 +11,7 @@ export const DarkPage: React.FC<DarkPageProps> = ({ className, children }) => {
   const darkStyles = { ...(darkTheme as React.CSSProperties), colorScheme: 'dark' as const };
   return (
     <div
-      className={cn('bg-background text-foreground', className)}
+      className={cn('relative bg-transparent text-foreground', className)}
       style={darkStyles}
     >
       {children}
