@@ -289,7 +289,7 @@ export default function App() {
       />
 
       <SidebarInset className="flex-1 flex flex-col h-screen overflow-y-auto relative w-full bg-transparent text-foreground">
-        <GlobalAlerts userRole={normalizedRole as any} />
+        <GlobalAlerts />
         <Header />
 
         <main className="flex-1 p-4 md:p-8 scroll-smooth bg-transparent text-foreground">
