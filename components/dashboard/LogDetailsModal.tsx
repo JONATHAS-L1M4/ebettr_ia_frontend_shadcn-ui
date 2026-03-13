@@ -48,8 +48,8 @@ export const LogDetailsModal: React.FC<LogDetailsModalProps> = ({ selectedLog, o
   const currentLength = displayText.length;
 
   return (
-    <div className="fixed inset-0 z-[9999] flex animate-fade-in items-center justify-center bg-background/80 p-4">
-      <div className="flex h-[80vh] w-full max-w-3xl animate-scale-in flex-col overflow-hidden rounded-xl border border-border bg-card shadow-2xl">
+    <div className="fixed inset-0 z-[9999] flex animate-fade-in items-center justify-center bg-background/68 p-4 backdrop-blur-[1.5px]">
+      <div className="flex h-[80vh] w-full max-w-3xl animate-scale-in flex-col overflow-hidden rounded-xl border border-border bg-[#101010] shadow-2xl">
         {/* Header */}
         <div className="flex shrink-0 items-center justify-between border-b border-border bg-muted/35 px-6 py-4">
           <div className="flex flex-col">

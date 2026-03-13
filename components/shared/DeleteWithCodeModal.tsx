@@ -1,5 +1,13 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { AlertTriangle } from '../ui/Icons';
+import { authOtpInputClass } from '../auth/authStyles';
+import { ConfirmationDialogShell } from './ConfirmationDialogShell';
+import {
+  confirmationDestructiveButtonClass,
+  confirmationSecondaryButtonClass,
+  getConfirmationIconWrapClass,
+} from './confirmationStyles';
 
 interface DeleteWithCodeModalProps {
   isOpen: boolean;
@@ -18,60 +26,120 @@ export const DeleteWithCodeModal: React.FC<DeleteWithCodeModalProps> = ({
 }) => {
   const [verificationCode, setVerificationCode] = useState('');
   const [userInput, setUserInput] = useState('');
+  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   useEffect(() => {
     if (isOpen) {
       const code = Math.floor(100000 + Math.random() * 900000).toString();
       setVerificationCode(code);
       setUserInput('');
+      const focusTimer = setTimeout(() => inputRefs.current[0]?.focus(), 100);
+      return () => clearTimeout(focusTimer);
     }
   }, [isOpen]);
+
+  const handleInput = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    index: number
+  ) => {
+    const value = e.target.value;
+
+    if (value === '') {
+      const chars = userInput.split('');
+      chars[index] = '';
+      setUserInput(chars.join(''));
+      return;
+    }
+
+    if (!/^\d$/.test(value.slice(-1))) return;
+
+    const chars = userInput.split('');
+    for (let i = 0; i < 6; i += 1) {
+      if (!chars[i]) chars[i] = '';
+    }
+
+    chars[index] = value.slice(-1);
+    setUserInput(chars.join('').slice(0, 6));
+
+    if (index < 5) {
+      inputRefs.current[index + 1]?.focus();
+    }
+  };
+
+  const handleKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+    index: number
+  ) => {
+    if (e.key === 'Backspace' && !userInput[index] && index > 0) {
+      inputRefs.current[index - 1]?.focus();
+    }
+  };
+
+  const handlePaste = (e: React.ClipboardEvent) => {
+    e.preventDefault();
+    const pastedData = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
+    if (!pastedData) return;
+
+    setUserInput(pastedData);
+    inputRefs.current[Math.min(pastedData.length - 1, 5)]?.focus();
+  };
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/60  z-[100] flex items-center justify-center p-4 animate-fade-in">
-        <div className="bg-card rounded-lg shadow-2xl border border-border max-w-sm w-full p-6 animate-scale-in">
-            <div className="flex flex-col items-center text-center gap-4">
-                <div>
-                    <h3 className="text-lg font-bold text-foreground">{title}</h3>
-                    <div className="text-sm text-muted-foreground mt-2">
-                       {description}
-                    </div>
-                </div>
-                
-                <div className="w-full bg-muted p-3 rounded-md border border-border">
-                    <p className="text-xl font-mono font-bold text-foreground tracking-widest select-all">
-                        {verificationCode}
-                    </p>
-                </div>
-
-                <input 
-                    type="text" 
-                    value={userInput}
-                    onChange={(e) => setUserInput(e.target.value)}
-                    placeholder="Digite o codigo aqui"
-                    className="w-full px-3 py-2 bg-background border border-input rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-destructive focus-visible:ring-offset-2 focus-visible:ring-offset-background text-sm placeholder:text-muted-foreground shadow-sm text-foreground text-center font-mono transition-all"
-                    maxLength={6}
-                />
-
-                <div className="flex gap-3 w-full pt-2">
-                    <button 
-                        onClick={onClose}
-                        className="flex h-10 flex-1 items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 py-2 text-xs font-bold uppercase tracking-wide text-muted-foreground shadow-sm transition-all hover:border-border hover:bg-muted hover:text-foreground"
-                    >
-                        Cancelar
-                    </button>
-                    <button 
-                        onClick={onConfirm}
-                        disabled={userInput !== verificationCode}
-                        className="flex h-10 flex-1 items-center justify-center gap-2 rounded-lg border border-red-900/50 bg-red-950/40 px-4 py-2 text-xs font-bold uppercase tracking-wide text-red-300 shadow-sm transition-all hover:border-red-600 hover:bg-red-700 hover:text-red-50 disabled:cursor-not-allowed disabled:opacity-50"
-                    >
-                        Confirmar
-                    </button>
-                </div>
-            </div>
+    <ConfirmationDialogShell
+      isOpen={isOpen}
+      title={title}
+      description={description}
+      onClose={onClose}
+      icon={
+        <div className={getConfirmationIconWrapClass(true)}>
+          <AlertTriangle className="h-5 w-5" />
         </div>
-    </div>
+      }
+      footer={
+        <>
+          <button onClick={onClose} className={confirmationSecondaryButtonClass}>
+            Cancelar
+          </button>
+          <button
+            onClick={onConfirm}
+            disabled={userInput !== verificationCode}
+            className={confirmationDestructiveButtonClass}
+          >
+            Confirmar
+          </button>
+        </>
+      }
+    >
+      <div className="space-y-3.5">
+        <div className="mx-auto w-fit rounded-lg bg-muted/40 px-3 py-2 shadow-inner">
+          <p className="select-all text-center font-mono text-xl font-bold tracking-[0.24em] text-foreground">
+            {verificationCode}
+          </p>
+        </div>
+
+        <div className="flex justify-center gap-1.5">
+          {[0, 1, 2, 3, 4, 5].map((index) => (
+            <input
+              key={index}
+              ref={(el) => {
+                inputRefs.current[index] = el;
+              }}
+              type="text"
+              maxLength={1}
+              inputMode="numeric"
+              value={userInput[index] || ''}
+              onChange={(e) => handleInput(e, index)}
+              onKeyDown={(e) => handleKeyDown(e, index)}
+              onPaste={handlePaste}
+              onFocus={(e) => e.target.select()}
+              className={`${authOtpInputClass} h-11 w-10 rounded-lg text-base sm:h-11 sm:w-10`}
+              aria-label={`Digito ${index + 1} do codigo`}
+            />
+          ))}
+        </div>
+      </div>
+    </ConfirmationDialogShell>
   );
 };

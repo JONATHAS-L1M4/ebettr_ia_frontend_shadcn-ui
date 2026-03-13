@@ -202,8 +202,8 @@ export const AdminAlerts: React.FC = () => {
  </div>
 
  {isModalOpen && (
- <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
- <div className="bg-card rounded-xl shadow-xl w-full max-w-md overflow-hidden">
+ <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/68 p-4 backdrop-blur-[1.5px] animate-fade-in">
+ <div className="w-full max-w-md overflow-hidden rounded-xl border border-border bg-[#101010] shadow-2xl animate-scale-in">
  <div className="px-6 py-4 border-border flex justify-between items-center">
  <h2 className="text-lg font-bold text-foreground">
  {editingAlert ? 'Editar Alerta' : 'Novo Alerta'}

@@ -518,22 +518,22 @@ const ConfigCard: React.FC<ConfigCardProps> = ({ section, onEdit, onDelete, onMo
 
         {/* CONFIRMATION OVERLAY */}
         {showSaveConfirmation && (
-            <div className="absolute inset-0 z-50 bg-background/90  flex items-center justify-center p-4 animate-fade-in rounded-xl">
-                <div className="text-center max-w-[280px] animate-scale-in">
+            <div className="absolute inset-0 z-50 flex items-center justify-center rounded-xl bg-background/72 p-4 backdrop-blur-[1.5px] animate-fade-in">
+                <div className="w-full max-w-[320px] rounded-xl border border-border bg-[#101010] p-5 text-center shadow-xl animate-scale-in">
                     <h4 className="text-sm font-bold text-foreground">Salvar Credenciais?</h4>
                     <p className="text-xs text-muted-foreground mt-1 mb-4 leading-relaxed">
                         Isso pode interromper a conexÃ£o do agente com serviÃ§os externos.
                     </p>
-                    <div className="flex gap-2 justify-center">
+                    <div className="flex flex-col-reverse justify-center gap-3 sm:flex-row">
                         <button 
                             onClick={() => setShowSaveConfirmation(false)}
-                            className="flex h-10 items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 py-2 text-xs font-bold uppercase tracking-wide text-muted-foreground shadow-sm transition-all hover:border-border hover:bg-muted hover:text-foreground"
+                            className="flex h-10 flex-1 items-center justify-center gap-2 rounded-xl border border-border bg-card/80 px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-muted-foreground shadow-sm transition-all hover:border-border hover:bg-muted hover:text-foreground"
                         >
                             Cancelar
                         </button>
                         <button 
                             onClick={executeSave}
-                            className="flex h-10 items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 py-2 text-xs font-bold uppercase tracking-wide text-muted-foreground shadow-sm transition-all hover:border-border hover:bg-muted hover:text-foreground"
+                            className="flex h-10 flex-1 items-center justify-center gap-2 rounded-xl border border-border bg-foreground px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-background shadow-sm transition-all hover:bg-foreground/90"
                         >
                             Confirmar
                         </button>
@@ -546,11 +546,11 @@ const ConfigCard: React.FC<ConfigCardProps> = ({ section, onEdit, onDelete, onMo
       {/* HELP MODAL */}
       {activeHelp && (
         <div 
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-background/90  p-4 animate-fade-in"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-background/68 p-4 backdrop-blur-[1.5px] animate-fade-in"
           onClick={() => setActiveHelp(null)}
         >
           <div 
-            className="bg-popover rounded-xl shadow-2xl border border-border w-full max-w-sm overflow-hidden animate-scale-in"
+            className="w-full max-w-sm overflow-hidden rounded-xl border border-border bg-[#101010] shadow-2xl animate-scale-in"
             onClick={(e) => e.stopPropagation()}
           >
              <div className="p-4 border-b border-border flex justify-between items-center">

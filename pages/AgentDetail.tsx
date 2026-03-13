@@ -11,6 +11,7 @@ import { toggleN8nWorkflow, updateN8nWorkflowConfig, fetchN8nWorkflowFullJson, e
 import { AgentDetailHeader } from '../components/agents/AgentDetailHeader';
 import { AgentForm } from '../components/agents/AgentForm';
 import { DeleteWithCodeModal } from '../components/shared/DeleteWithCodeModal';
+import { ConfirmationModal } from '../components/shared/ConfirmationModal';
 import { AddModuleCard } from '../components/AddModuleCard';
 import { CredentialsManager } from '../components/credentials/CredentialsManager';
 import { decryptPath } from '../utils/encryption';
@@ -1039,34 +1040,15 @@ const AgentDetail: React.FC<AgentDetailProps> = ({
         />
       )}
 
-      {deletingSectionId && (
-        <div className="fixed inset-0 bg-black/70  z-[100] flex items-center justify-center p-4">
-            <div className="bg-card rounded-lg shadow-2xl border border-border max-w-sm w-full p-6 animate-scale-in">
-                <div className="flex flex-col items-center text-center gap-4">
-                    <div>
-                        <h3 className="text-lg font-bold text-foreground">Excluir Módulo?</h3>
-                        <p className="text-sm text-muted-foreground mt-2">
-                            Esta ação removerá permanentemente este módulo de configuração do agente.
-                        </p>
-                    </div>
-                    <div className="flex gap-3 w-full pt-2">
-                        <button 
-                            onClick={() => setDeletingSectionId(null)}
-                            className="flex h-10 flex-1 items-center justify-center py-2 text-sm font-medium text-muted-foreground hover:bg-muted rounded-md transition-colors"
-                        >
-                            Cancelar
-                        </button>
-                        <button 
-                            onClick={confirmDeleteModule}
-                            className="flex h-10 flex-1 items-center justify-center py-2 text-sm font-bold text-red-50 bg-red-700 hover:bg-red-600 rounded-md transition-colors shadow-sm"
-                        >
-                            Excluir
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-      )}
+      <ConfirmationModal
+        isOpen={Boolean(deletingSectionId)}
+        title="Excluir Modulo?"
+        message="Esta acao removera permanentemente este modulo de configuracao do agente."
+        onClose={() => setDeletingSectionId(null)}
+        onConfirm={confirmDeleteModule}
+        confirmLabel="Excluir"
+        isDestructive
+      />
 
       <DeleteWithCodeModal 
         isOpen={isDeleteAgentModalOpen}

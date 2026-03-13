@@ -513,11 +513,11 @@ export const CredentialForm: React.FC<CredentialFormProps> = ({
 
       {activeHelp && (
         <div
-          className="fixed inset-0 z-[200] flex items-center justify-center bg-black/70 p-4 animate-fade-in"
+          className="fixed inset-0 z-[200] flex items-center justify-center bg-background/68 p-4 backdrop-blur-[1.5px] animate-fade-in"
           onClick={() => setActiveHelp(null)}
         >
           <div
-            className="w-full max-w-sm overflow-hidden rounded-xl border border-border bg-card shadow-2xl animate-scale-in"
+            className="w-full max-w-sm overflow-hidden rounded-xl border border-border bg-[#101010] shadow-2xl animate-scale-in"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between border-b border-border bg-muted p-4">

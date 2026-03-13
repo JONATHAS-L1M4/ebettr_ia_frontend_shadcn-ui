@@ -38,6 +38,7 @@ import {
 import { Agent, UserRole } from '../../types';
 import { useNotification } from '../../context/NotificationContext';
 import { cn } from '../../utils/cn';
+import { ConfirmationModal } from '../shared/ConfirmationModal';
 
 interface SidebarProps {
   userRole: UserRole | null;
@@ -364,36 +365,20 @@ export const Sidebar: React.FC<SidebarProps> = ({
               </SidebarMenuItem>
             </SidebarMenu>
           )}
+
         </SidebarFooter>
 
       </SidebarRoot>
 
-      {showLogoutConfirm && (
-        <div className="fixed inset-0 z-[100] flex animate-fade-in items-center justify-center bg-background/70 p-4 ">
-          <div className="w-full max-w-sm animate-scale-in rounded-xl border border-border bg-card p-6 text-card-foreground shadow-2xl">
-            <div className="flex flex-col items-center gap-4 text-center">
-              <div>
-                <h3 className="text-lg font-bold text-card-foreground">Encerrar Sessao?</h3>
-                <p className="mt-2 text-sm text-muted-foreground">Voce tem certeza que deseja sair da plataforma?</p>
-              </div>
-              <div className="flex w-full gap-3 pt-2">
-                <button
-                  onClick={() => setShowLogoutConfirm(false)}
-                  className="flex h-10 flex-1 items-center justify-center rounded-lg border border-border py-2 text-sm font-bold text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
-                >
-                  Cancelar
-                </button>
-                <button
-                  onClick={handleConfirmLogout}
-                  className="flex h-10 flex-1 items-center justify-center rounded-lg bg-red-600 py-2 text-sm font-bold text-white shadow-sm transition-colors hover:bg-red-700"
-                >
-                  Sair
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      <ConfirmationModal
+        isOpen={showLogoutConfirm}
+        title="Encerrar Sessao?"
+        message="Voce tem certeza que deseja sair da plataforma?"
+        onClose={() => setShowLogoutConfirm(false)}
+        onConfirm={handleConfirmLogout}
+        confirmLabel="Sair"
+        isDestructive
+      />
     </>
   );
 };

@@ -404,8 +404,8 @@ export const SessionsTable: React.FC<SessionsTableProps> = ({
       </div>
 
       {mapLocation && (
-        <div className="fixed inset-0 z-50 flex animate-fade-in items-center justify-center bg-black/50 p-4">
-          <div className="flex w-full max-w-2xl flex-col overflow-hidden rounded-xl border border-border bg-panel shadow-2xl">
+        <div className="fixed inset-0 z-50 flex animate-fade-in items-center justify-center bg-background/68 p-4 backdrop-blur-[1.5px]">
+          <div className="flex w-full max-w-2xl flex-col overflow-hidden rounded-xl border border-border bg-[#101010] shadow-2xl">
             <div className="flex items-center justify-between border-border bg-muted px-4 py-3">
               <div className="flex items-center gap-2 text-foreground">
                 <MapPin className="h-4 w-4 text-primary" />

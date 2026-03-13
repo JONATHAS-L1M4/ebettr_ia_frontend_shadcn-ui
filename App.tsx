@@ -24,6 +24,7 @@ import { SESSION_EXPIRED_EVENT } from './services/apiUtils';
 import { useNotification } from './context/NotificationContext';
 import { NotFound } from './pages/NotFound';
 import { darkTheme } from './design-tokens';
+import { APP_VERSION } from './appVersion';
 
 
 const USER_CACHE_KEY = 'ebettr_user_cache';
@@ -112,6 +113,11 @@ export default function App() {
       style={darkStyle}
     >
       <div className="relative z-10">{content}</div>
+      <div className="pointer-events-none fixed right-4 bottom-3 z-20 text-right">
+        <span className="text-[10px] text-muted-foreground/65">
+          v{APP_VERSION}
+        </span>
+      </div>
     </div>
   );
 

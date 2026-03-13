@@ -266,8 +266,8 @@ export const CredentialsManager: React.FC<CredentialsManagerProps> = ({ workflow
           </div>
 
           {selectedCredential && (
-            <div className="fixed inset-0 bg-black/70  z-[100] flex items-center justify-center p-4 animate-fade-in">
-                <div className="bg-card w-full max-w-2xl h-[85vh] rounded-xl shadow-2xl border border-border overflow-hidden animate-scale-in ring-1 ring-border flex flex-col">
+            <div className="fixed inset-0 z-[100] flex items-center justify-center bg-background/68 p-4 backdrop-blur-[1.5px] animate-fade-in">
+                <div className="flex h-[85vh] w-full max-w-2xl flex-col overflow-hidden rounded-xl border border-border bg-[#101010] shadow-2xl animate-scale-in">
                     <CredentialForm 
                         workflowId={workflowId}
                         credentialType={selectedCredential.type}

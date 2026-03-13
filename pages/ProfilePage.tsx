@@ -475,8 +475,8 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
 
         {/* 2FA SETUP MODAL (POP-UP) */}
         {isSettingUp2FA && (
-            <div className="fixed inset-0 bg-black/60  z-[100] flex items-center justify-center p-4 animate-fade-in">
-                <div className="bg-card rounded-xl shadow-2xl border border-border w-full max-w-2xl overflow-hidden animate-scale-in ring-1 ring-border">
+            <div className="fixed inset-0 z-[100] flex items-center justify-center bg-background/68 p-4 backdrop-blur-[1.5px] animate-fade-in">
+                <div className="w-full max-w-2xl overflow-hidden rounded-xl border border-border bg-[#101010] shadow-2xl animate-scale-in">
                     
                     {/* Modal Header */}
                     <div className="px-6 py-4 border-b border-border flex items-center justify-between bg-muted">
@@ -592,8 +592,8 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ user, onSave, onBack }
 
         {/* 2FA RESET CONFIRMATION MODAL */}
         {isResetting2FA && (
-            <div className="fixed inset-0 bg-black/60  z-[100] flex items-center justify-center p-4 animate-fade-in">
-                <div className="bg-card rounded-xl shadow-2xl border border-border w-full max-w-md overflow-hidden animate-scale-in ring-1 ring-border">
+            <div className="fixed inset-0 z-[100] flex items-center justify-center bg-background/68 p-4 backdrop-blur-[1.5px] animate-fade-in">
+                <div className="w-full max-w-md overflow-hidden rounded-xl border border-border bg-[#101010] shadow-2xl animate-scale-in">
                     <div className="px-6 py-4 border-b border-border flex items-center justify-between bg-muted">
                         <h3 className="text-sm font-bold text-foreground uppercase tracking-wide">
                             Confirmar Desativação

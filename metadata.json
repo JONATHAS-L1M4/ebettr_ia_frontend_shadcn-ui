@@ -1,5 +1,5 @@
 {
-  "name": "Ebettr IA Manager - v1.4.0",
+  "name": "Ebettr IA Manager - v1.7.0",
   "description": "A comprehensive dashboard for managing and configuring AI Agents with granular control.",
   "requestFramePermissions": [
     "microphone"
