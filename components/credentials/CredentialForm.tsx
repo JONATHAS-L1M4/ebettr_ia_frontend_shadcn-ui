@@ -33,6 +33,17 @@ interface CredentialFormProps {
   onCancel: () => void;
 }
 
+type FieldDisplayOptions = {
+  show?: Record<string, any>;
+  hide?: Record<string, any>;
+};
+
+function getFieldDisplayOptions(field: ConfigField): FieldDisplayOptions {
+  const legacy = (field as ConfigField & { displayOptions?: FieldDisplayOptions })
+    .displayOptions;
+  return field.n8nDisplayOptions || legacy || {};
+}
+
 function toArray<T>(v: T | T[]): T[] {
   return Array.isArray(v) ? v : [v];
 }
@@ -56,7 +67,7 @@ function shouldShowField(
   if (!field) return false;
   if (field.type === 'hidden') return false;
 
-  const display = field.n8nDisplayOptions || {};
+  const display = getFieldDisplayOptions(field);
   const show = display.show || null;
   const hide = display.hide || null;
 
@@ -79,6 +90,47 @@ function shouldShowField(
   return true;
 }
 
+function collectConditionalValues(schema: ConfigField[]) {
+  const dependencyValues: Record<string, Set<any>> = {};
+
+  schema.forEach((field) => {
+    const display = getFieldDisplayOptions(field);
+
+    ['show', 'hide'].forEach((mode) => {
+      const rules = display[mode as keyof FieldDisplayOptions];
+      if (!rules) return;
+
+      Object.entries(rules).forEach(([dep, allowed]) => {
+        const allowedArr = toArray(allowed);
+        if (!dependencyValues[dep]) dependencyValues[dep] = new Set();
+        allowedArr.forEach((value) => dependencyValues[dep].add(value));
+      });
+    });
+  });
+
+  return dependencyValues;
+}
+
+function inferMissingDependencyDefaults(
+  schema: ConfigField[],
+  values: Record<string, any>
+) {
+  const dependencyValues = collectConditionalValues(schema);
+
+  Object.entries(dependencyValues).forEach(([dep, allowedSet]) => {
+    if (values[dep] !== undefined) return;
+
+    const allowedValues = Array.from(allowedSet);
+    const onlyBooleans =
+      allowedValues.length > 0 &&
+      allowedValues.every((value) => typeof value === 'boolean');
+
+    if (onlyBooleans) {
+      values[dep] = allowedValues.includes(false) ? false : allowedValues[0];
+    }
+  });
+}
+
 function sanitizePayload(
   schema: ConfigField[],
   values: Record<string, any>,
@@ -99,6 +151,7 @@ function sanitizePayload(
     if (!shouldShowField(field, values, getValue)) return;
 
     const key = getFieldKey(field);
+    if (!key) return;
     const val = values[key];
 
     if (val === '' || val === undefined || val === null) return;
@@ -139,7 +192,10 @@ export const CredentialForm: React.FC<CredentialFormProps> = ({
     title: string;
     text: string;
   } | null>(null);
-  const getFieldKey = (f: ConfigField) => f.id || '';
+  const getFieldKey = (f: ConfigField) =>
+    f.id ||
+    (f as ConfigField & { name?: string }).name ||
+    '';
   const getValue = (key: string) => values[key];
 
   const [dummySecrets, setDummySecrets] = useState<Record<string, string>>({});
@@ -201,6 +257,7 @@ export const CredentialForm: React.FC<CredentialFormProps> = ({
 
         schemaFields.forEach((f) => {
           const key = getFieldKey(f);
+          if (!key) return;
           const isSecret = f.n8nTypeOptions?.password || f.secret;
 
           if (isSecret && credentialId) {
@@ -221,6 +278,7 @@ export const CredentialForm: React.FC<CredentialFormProps> = ({
           }
         });
 
+        inferMissingDependencyDefaults(schemaFields, nextValues);
         setDummySecrets(nextDummies);
         setValues(nextValues);
       } catch (e: any) {
